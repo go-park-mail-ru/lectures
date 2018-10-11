@@ -1,0 +1,3 @@
+package: golang-2017-2/5/8_dependencies/glide
+import:
+- package: google.golang.org/grpc
