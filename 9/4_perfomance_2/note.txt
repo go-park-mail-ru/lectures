@@ -1,0 +1,1 @@
+go tool pprof -http=:8080 pprof_2.exe cpu_out.txt
