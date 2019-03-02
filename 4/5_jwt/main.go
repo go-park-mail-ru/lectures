@@ -56,7 +56,6 @@ func main() {
 		}
 		w.Write([]byte("not authorized"))
 		fmt.Println(err)
-
 	})
 
 	http.ListenAndServe(":9999", nil)

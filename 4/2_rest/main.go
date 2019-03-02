@@ -6,6 +6,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type Author struct {
+	Name string `json:"name"`
+}
+
 type Book struct {
 	ID     uint   `json:"id"`
 	Title  string `json:"string"`
