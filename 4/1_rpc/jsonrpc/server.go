@@ -22,11 +22,11 @@ func (c *HttpConn) Close() error                      { return nil }
 {
    "jsonrpc":"2.0",
    "id":1,
-   "method":"SessionManager.Create",
+   "method":"BookStore.AddBook",
    "params":[
       {
-         "login":"rvasily",
-         "useragent":"chrome"
+         "title": "The Moon is a harsh mistress",
+         "price": 200
       }
    ]
 }
@@ -34,9 +34,9 @@ func (c *HttpConn) Close() error                      { return nil }
 
 /*
 
-curl -v -X POST -H "Content-Type: application/json" -H "X-Auth: 123" -d '{"jsonrpc":"2.0", "id": 1, "method": "SessionManager.Create", "params": [{"login":"dmitry", "useragent": "chrome"}]}' http://localhost:8081/rpc
+curl -v -X POST -H "Content-Type: application/json" -H "X-Auth: 123" -d '{"jsonrpc":"2.0", "id": 1, "method": "BookStore.AddBook", "params": [{"title":"The Moon is a harsh mistress", "price": 200}]}' http://localhost:8081/rpc
 
-curl -v -X POST -H "Content-Type: application/json" -H "X-Auth: 123" -d '{"jsonrpc":"2.0", "id": 2, "method": "SessionManager.Check", "params": [{"id":"XVlBzgbaiC"}]}' http://localhost:8081/rpc
+curl -v -X POST -H "Content-Type: application/json" -H "X-Auth: 123" -d '{"jsonrpc":"2.0", "id": 2, "method": "BookStore.GetBooks", "params": []}' http://localhost:8081/rpc
 
 */
 
@@ -51,7 +51,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		in:  r.Body,
 		out: w,
 	})
-	w.Header().Set("Content-type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 	err := h.rpcServer.ServeRequest(serverCodec)
 	if err != nil {
 		log.Printf("Error while serving JSON request: %v", err)
@@ -62,10 +62,10 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	sessManager := NewSessManager()
+	bookStore := NewBookStore()
 
 	server := rpc.NewServer()
-	server.Register(sessManager)
+	server.Register(bookStore)
 
 	sessionHandler := &Handler{
 		rpcServer: server,

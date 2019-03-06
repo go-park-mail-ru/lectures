@@ -9,5 +9,6 @@ require (
 	github.com/graphql-go/graphql v0.7.7
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/vektah/gqlparser v1.1.1
+	golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421 // indirect
 	golang.org/x/tools v0.0.0-20190228203856-589c23e65e65 // indirect
 )
