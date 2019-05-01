@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	consulAddr = flag.String("addr", "192.168.99.100:32769", "consul addr (8500 in original consul)")
+	consulAddr = flag.String("addr", "127.0.0.1:8500", "consul addr (8500 in original consul)")
 
 	consul          *consulapi.Client
 	consulLastIndex uint64 = 0

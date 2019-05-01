@@ -18,7 +18,7 @@ var (
 // go run flag.go --comments=true --servers="127.0.0.1:8081,127.0.0.1:8082"
 
 func init() {
-	flag.Var(commentsServices, "servers", "Comments number per page")
+	flag.Var(commentsServices, "servers", "Addresses")
 }
 
 func main() {

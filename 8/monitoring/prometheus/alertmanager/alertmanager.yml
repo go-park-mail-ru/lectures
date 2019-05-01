@@ -1,0 +1,37 @@
+global:
+  resolve_timeout: 5m
+  smtp_from: park.alerting@mail.ru
+  smtp_hello: mail.ru
+  smtp_smarthost: smtp.mail.ru:465
+  smtp_auth_username: park.alerting@mail.ru
+  smtp_auth_password: gb=D>zTa8)uLkndj@peE
+  smtp_require_tls: false
+
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 10s
+  repeat_interval: 20s
+  receiver: 'email'
+
+receivers:
+- name: 'alertmananger-bot'
+  webhook_configs:
+   - url: 'http://alertmanager-bot:8080'
+
+- name: email
+  email_configs:
+  - send_resolved: false
+    to: park.alerting@mail.ru
+    headers:
+      From: park.alerting@mail.ru
+      Subject: '{{ template "email.default.subject" . }}'
+      To: park.alerting@mail.ru
+    html: '{{ template "email.default.html" . }}'
+
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'instance']
