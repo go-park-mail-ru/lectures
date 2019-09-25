@@ -3,10 +3,17 @@ package main
 import (
 	"net/http"
 
-	_ "swagger/docs"
+	_ "github.com/go-park-mail-ru/lectures/4/4_swagger/docs"
 
 	httpSwagger "github.com/swaggo/http-swagger"
 )
+
+// swag init
+
+type myError struct {
+	Status int
+	Error  string
+}
 
 // ShowAccount godoc
 // @Summary Show a account
@@ -18,7 +25,7 @@ import (
 // @Success 200 {object} model.User
 // @Failure 400 {object} model.Error
 // @Failure 404 {object} model.Error
-// @Failure 500 {object} model.Error
+// @Failure 500 {object} myError
 // @Router /user/{id} [get]
 func handleUsers(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`{"status": "ok"}`))
@@ -45,6 +52,6 @@ func main() {
 		w.Write([]byte("url: " + r.URL.String()))
 	})
 
-	http.ListenAndServe(":9090", nil)
+	http.ListenAndServe(":8080", nil)
 
 }
