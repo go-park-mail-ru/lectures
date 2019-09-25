@@ -12,10 +12,12 @@ func main() {
 		log.Fatal("dialing:", err)
 	}
 
-	client.Call("BookStore.AddBook", &Book{Title: "The Moon is a harsh mistress"}, new(Book))
+	res := new(Book)
+	client.Call("BookStore.AddBook", &Book{Title: "The Moon is a harsh mistress"}, res)
 	if err != nil {
 		log.Printf("AddBook error: %s\n", err)
 	}
+	log.Printf("AddBook: %#v", res)
 
 	books := &[]*Book{}
 
@@ -24,5 +26,5 @@ func main() {
 		log.Printf("GetBooks error: %s\n", err)
 	}
 
-	log.Printf("%#v", *books)
+	log.Printf("GetBooks: %#v", *books)
 }

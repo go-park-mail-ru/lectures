@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	APP_ID     = "6703763"
-	APP_KEY    = "NJaZc5qmq5jnVu9eo7SO"
-	APP_SECRET = "bc547f20bc547f20bc547f202cbc3235b3bbc54bc547f20e7ff0660a087e7cb533a64fe"
+	APP_ID     = "7065390"
+	APP_KEY    = "cQZe3Vvo4mHotmetUdXK"
+	APP_SECRET = "1bbf49951bbf49951bbf49953b1bd486bb11bbf1bbf4995468b3d76e2cb2114610654e0"
 	API_URL    = "https://api.vk.com/method/users.get?fields=email,photo_50&access_token=%s&v=5.52"
 )
 
@@ -25,7 +25,7 @@ type Response struct {
 	}
 }
 
-// https://oauth.vk.com/authorize?client_id=6703763&redirect_uri=http://127.0.0.1:8080/
+// https://oauth.vk.com/authorize?client_id=7065390&redirect_uri=http://localhost:8080/&response_type=code&scope=email
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +34,7 @@ func main() {
 		conf := oauth2.Config{
 			ClientID:     APP_ID,
 			ClientSecret: APP_KEY,
-			RedirectURL:  "http://127.0.0.1:8080/",
+			RedirectURL:  "http://localhost:8080/",
 			Endpoint:     vk.Endpoint,
 		}
 

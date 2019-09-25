@@ -4,18 +4,20 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dgrijalva/jwt-go"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 var SECRET = []byte("myawesomesecret")
 
+// http://127.0.0.1:8080/login?username=rvasily
+
 func main() {
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 
-		if r.Method != http.MethodPost {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
+		// if r.Method != http.MethodPost {
+		// 	w.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
 
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 			"username": r.FormValue("username"),
@@ -51,12 +53,12 @@ func main() {
 		})
 
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			w.Write([]byte("hello" + claims["username"].(string)))
+			w.Write([]byte("hello " + claims["username"].(string)))
 			return
 		}
 		w.Write([]byte("not authorized"))
 		fmt.Println(err)
 	})
 
-	http.ListenAndServe(":9999", nil)
+	http.ListenAndServe(":8080", nil)
 }
