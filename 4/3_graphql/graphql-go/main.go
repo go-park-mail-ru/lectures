@@ -13,17 +13,17 @@ import (
 
 /*
 Create
-http://127.0.0.1:8080/graphql?query=mutation+_{create(title:"taocp",price:2500){id,title,price}}
+http://127.0.0.1:8080/graphql?query=mutation+_{create(title:%22taocp%22,price:2500,author:1){id,title,price}}
 
 Read
 http://127.0.0.1:8080/graphql?query={books{id,title,author{name}}}
 http://127.0.0.1:8080/graphql?query={book(id:1){id,title,author{name}}}
 
 Update
-http://127.0.0.1:8080/graphql?query=mutation+_{update(id:1,price:3.95){id,name,info,price}}
+http://127.0.0.1:8080/graphql?query=mutation+_{update(id:1,price:42.0,title:"test"){id,title,price}}
 
 Delete
-http://127.0.0.1:8080/graphql?query=mutation+_{delete(id:1){id,name,info,price}}
+http://127.0.0.1:8080/graphql?query=mutation+_{delete(id:1){id,title,price}}
 */
 
 type Author struct {
@@ -102,7 +102,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 					Type: graphql.NewNonNull(graphql.String),
 				},
 				"author": &graphql.ArgumentConfig{
-					Type: authorType,
+					Type: graphql.NewNonNull(graphql.Int),
 				},
 				"price": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(graphql.Float),
@@ -116,7 +116,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 				book := Book{
 					ID:     int64(rand.Intn(100000)), // генерируем случайный ID
 					Title:  params.Args["title"].(string),
-					Author: params.Args["author"].(uint),
+					Author: uint(params.Args["author"].(int)),
 					Price:  params.Args["price"].(float64),
 				}
 				books = append(books, book)
@@ -135,7 +135,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 					Type: graphql.String,
 				},
 				"author": &graphql.ArgumentConfig{
-					Type: authorType,
+					Type: graphql.Int,
 				},
 				"price": &graphql.ArgumentConfig{
 					Type: graphql.Float,
@@ -144,23 +144,23 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 				id, _ := params.Args["id"].(int)
 				title, titleOk := params.Args["title"].(string)
-				author, authorOk := params.Args["author"].(uint)
+				author, authorOk := params.Args["author"].(int)
 				price, priceOk := params.Args["price"].(float64)
 				book := Book{}
 				for i, p := range books {
-					if int64(id) == p.ID {
-						if titleOk {
-							books[i].Title = title
-						}
-						if authorOk {
-							books[i].Author = author
-						}
-						if priceOk {
-							books[i].Price = price
-						}
-						book = books[i]
-						break
+					if int64(id) != p.ID {
+						continue
 					}
+					if titleOk {
+						books[i].Title = title
+					}
+					if authorOk {
+						books[i].Author = uint(author)
+					}
+					if priceOk {
+						books[i].Price = price
+					}
+					book = books[i]
 				}
 				return book, nil
 			},
