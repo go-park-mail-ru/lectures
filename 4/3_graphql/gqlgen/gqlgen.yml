@@ -12,3 +12,4 @@ model:
 resolver:
   filename: resolver.go
   type: Resolver
+autobind: []

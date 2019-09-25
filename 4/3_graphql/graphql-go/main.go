@@ -3,12 +3,28 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"time"
 
 	"github.com/graphql-go/graphql"
 )
+
+/*
+Create
+http://127.0.0.1:8080/graphql?query=mutation+_{create(title:"taocp",price:2500){id,title,price}}
+
+Read
+http://127.0.0.1:8080/graphql?query={books{id,title,author{name}}}
+http://127.0.0.1:8080/graphql?query={book(id:1){id,title,author{name}}}
+
+Update
+http://127.0.0.1:8080/graphql?query=mutation+_{update(id:1,price:3.95){id,name,info,price}}
+
+Delete
+http://127.0.0.1:8080/graphql?query=mutation+_{delete(id:1){id,name,info,price}}
+*/
 
 type Author struct {
 	Name string `json:"string"`
@@ -94,6 +110,8 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 				rand.Seed(time.Now().UnixNano())
+
+				log.Println(params.Args)
 
 				book := Book{
 					ID:     int64(rand.Intn(100000)), // генерируем случайный ID
