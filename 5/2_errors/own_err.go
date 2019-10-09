@@ -10,9 +10,16 @@ var (
 	client = http.Client{Timeout: time.Duration(time.Millisecond)}
 )
 
+type HTTPError struct {
+	Code int
+}
+
+var e error = &ResourceError{}
+
 type ResourceError struct {
-	URL string
-	Err error
+	URL  string
+	Err  error
+	Code int
 }
 
 func (re *ResourceError) Error() string {

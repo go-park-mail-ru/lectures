@@ -27,6 +27,7 @@ func GetUser(ctx *fasthttp.RequestCtx) {
 func main() {
 	router := fasthttprouter.New()
 	router.GET("/", Index)
+	// /users/123
 	router.GET("/users/:id", GetUser)
 
 	fmt.Println("starting server at :8080")
