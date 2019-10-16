@@ -18,6 +18,7 @@ func getRemoteResource() error {
 	_, err := client.Get(url)
 	if err != nil {
 		return errors.Wrap(err, "resource error")
+		// resource error: timeout
 	}
 	return nil
 }
@@ -29,7 +30,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		switch err := errors.Cause(err).(type) {
 		case *url.Error:
 			fmt.Printf("resource %s err: %+v\n", err.URL, err.Err)
-			http.Error(w, "remote resource error", 500)
+			http.Error(w, "remote resource error", 422)
 		default:
 			fmt.Printf("%+v\n", err)
 			http.Error(w, "parsing error", 500)
