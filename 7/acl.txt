@@ -1,0 +1,50 @@
+ACL:
+
+/admin/user/edit
+    1
+    2
+    3
+/admin/user/moderate
+    1
+
+-------
+
+1
+    /admin/user/edit
+    /admin/user/moderate
+
+-------------------------------
+
+RBAC:
+
+user_id; role
+1; user
+2; moderator
+3; admin
+
+
+
+/admin/user/edit
+    moderator
+    admin
+/admin/user/moderate
+    admin
+
+-------
+
+admin
+    /admin/user/edit
+    /admin/user/moderate
+
+
+
+------
+
+https://github.com/casbin/casbin
+
+
+type Session struct {
+    ID string
+    UserID string
+    Role string
+}

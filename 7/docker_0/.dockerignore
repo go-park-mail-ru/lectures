@@ -1,0 +1,5 @@
+*.exe
+.git
+.DS_Store
+.gitignore
+

@@ -3,9 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-
 	"github.com/microcosm-cc/bluemonday"
+	"net/http"
 )
 
 // для санитайзинга на сторое фронта используйте https://github.com/cure53/DOMPurify

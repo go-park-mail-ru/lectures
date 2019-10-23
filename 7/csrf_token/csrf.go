@@ -97,7 +97,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		sess, err := checkSession(r)
-		if err {
+		if err != nil {
 			w.Write([]byte(loginFormTmplRaw))
 			return
 		}
@@ -135,9 +135,9 @@ func main() {
 		}
 
 		CSRFToken := r.FormValue("csrf-token")
-		ok, err := tocken.Check(sess, CSRFToken)
+		_, err = tokens.Check(sess, CSRFToken)
 		if err != nil {
-			w.Write([]byte(emptyResponse))
+			w.Write([]byte("{}"))
 			return
 		}
 
@@ -165,7 +165,7 @@ func main() {
 		}
 
 		CSRFToken := r.Header.Get("csrf-token")
-		ok, err := tocken.Check(sess, CSRFToken)
+		_, err = tokens.Check(sess, CSRFToken)
 		if err != nil {
 			w.Write([]byte(emptyResponse))
 			return
@@ -188,8 +188,8 @@ func main() {
 
 	// сервисный метод для очистки комментариев
 	http.HandleFunc("/clear_comments", func(w http.ResponseWriter, r *http.Request) {
-		sess, err := checkSession(r)
-		if err {
+		_, err := checkSession(r)
+		if err != nil {
 			w.Write([]byte(loginFormTmplRaw))
 			return
 		}
@@ -207,7 +207,7 @@ func main() {
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	inputLogin := r.Form["login"][0]
+	// inputLogin := r.Form["login"][0]
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 
 	sessionID := RandStringRunes(32)
@@ -218,7 +218,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-func checkSession(r *http.Request) bool {
+func checkSession(r *http.Request) (*Session, error) {
 	// обработка сессии
 	// не используйте эитот подход в продакшене
 	sessionID, err := r.Cookie("session_id")
@@ -231,7 +231,7 @@ func checkSession(r *http.Request) bool {
 	if !ok {
 		return nil, fmt.Errorf("no session")
 	}
-	return true
+	return sess, nil
 }
 
 //PanicOnErr panics on error
