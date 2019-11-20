@@ -7,7 +7,7 @@ import (
 	"net"
 	"strconv"
 
-	"lectures/7/4_grpc/session"
+	"github.com/go-park-mail-ru/lectures/microservices/4_grpc/session"
 
 	"google.golang.org/grpc"
 

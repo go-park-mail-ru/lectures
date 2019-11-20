@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"lectures/7/6_grpc_stream/translit"
+	"github.com/go-park-mail-ru/lectures/microservices/6_grpc_stream/translit"
 	"log"
 	"net"
 

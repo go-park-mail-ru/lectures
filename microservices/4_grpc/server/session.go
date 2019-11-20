@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"lectures/7/4_grpc/session"
 	"math/rand"
 	"sync"
+
+	"github.com/go-park-mail-ru/lectures/microservices/4_grpc/session"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

@@ -9,7 +9,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"lectures/7/6_grpc_stream/translit"
+	"github.com/go-park-mail-ru/lectures/microservices/6_grpc_stream/translit"
 )
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 	tr := translit.NewTransliterationClient(grcpConn)
 
 	ctx := context.Background()
-	client, err := tr.EnRu(ctx)
+	stream, err := tr.EnRu(ctx)
 
 	wg := &sync.WaitGroup{}
 	wg.Add(2)
@@ -36,19 +36,19 @@ func main() {
 		words := []string{"privet", "kak", "dela"}
 		for _, w := range words {
 			fmt.Println("-> ", w)
-			client.Send(&translit.Word{
+			stream.Send(&translit.Word{
 				Word: w,
 			})
 			// time.Sleep(2 * time.Second)
 		}
-		client.CloseSend()
+		stream.CloseSend()
 		fmt.Println("\tsend done")
 	}(wg)
 
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
 		for {
-			outWord, err := client.Recv()
+			outWord, err := stream.Recv()
 			if err == io.EOF {
 				fmt.Println("\tstream closed")
 				return

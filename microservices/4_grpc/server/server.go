@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"lectures/7/4_grpc/session"
+	"github.com/go-park-mail-ru/lectures/microservices/4_grpc/session"
 	"log"
 	"net"
 

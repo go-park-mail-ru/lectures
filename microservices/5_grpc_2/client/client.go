@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	"lectures/7/4_grpc/session"
+	"github.com/go-park-mail-ru/lectures/microservices/4_grpc/session"
 )
 
 func timingInterceptor(
