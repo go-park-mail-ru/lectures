@@ -11,12 +11,12 @@ func (in *User) Unpack(data []byte) error {
 	binary.Read(r, binary.LittleEndian, &IDRaw)
 	in.ID = int(IDRaw)
 
-	// Login
-	var LoginLenRaw uint32
-	binary.Read(r, binary.LittleEndian, &LoginLenRaw)
-	LoginRaw := make([]byte, LoginLenRaw)
-	binary.Read(r, binary.LittleEndian, &LoginRaw)
-	in.Login = string(LoginRaw)
+	// Name
+	var NameLenRaw uint32
+	binary.Read(r, binary.LittleEndian, &NameLenRaw)
+	NameRaw := make([]byte, NameLenRaw)
+	binary.Read(r, binary.LittleEndian, &NameRaw)
+	in.Name = string(NameRaw)
 
 	// Flags
 	var FlagsRaw uint32
@@ -24,3 +24,4 @@ func (in *User) Unpack(data []byte) error {
 	in.Flags = int(FlagsRaw)
 	return nil
 }
+

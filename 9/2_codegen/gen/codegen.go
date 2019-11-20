@@ -102,17 +102,17 @@ func main() {
 				}
 
 				fieldName := field.Names[0].Name
-				fileType := field.Type.(*ast.Ident).Name
+				fieldType := field.Type.(*ast.Ident).Name
 
 				fmt.Printf("\tgenerating code for field %s.%s\n", currType.Name.Name, fieldName)
 
-				switch fileType {
+				switch fieldType {
 				case "int":
 					intTpl.Execute(out, tpl{fieldName})
 				case "string":
 					strTpl.Execute(out, tpl{fieldName})
 				default:
-					log.Fatalln("unsupported", fileType)
+					log.Fatalln("unsupported", fieldType)
 				}
 			}
 

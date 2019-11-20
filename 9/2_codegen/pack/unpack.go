@@ -8,7 +8,7 @@ import "fmt"
 type User struct {
 	ID       int
 	RealName string `cgen:"-"`
-	Login    string
+	Name     string
 	Flags    int
 }
 
@@ -21,14 +21,14 @@ var test = 42
 
 func main() {
 	/*
-		perl -E '$b = pack("L L/a* L", 1_123_456, "v.romanov", 16);
+		perl -E '$b = pack("L L/a* L", 1_123_456, "kek.kekovitch", 16);
 			print map { ord.", "  } split("", $b); '
 	*/
 	data := []byte{
 		128, 36, 17, 0,
 
-		9, 0, 0, 0,
-		118, 46, 114, 111, 109, 97, 110, 111, 118,
+		13, 0, 0, 0,
+		107, 101, 107, 46, 107, 101, 107, 111, 118, 105, 116, 99, 104,
 
 		16, 0, 0, 0,
 	}

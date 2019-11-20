@@ -38,7 +38,7 @@ func main() {
 
 /*
 
-go build -o pprof_2.exe pprof_2.go && ./pprof_2.exe
+go build -o pprof_2 pprof_2.go && ./pprof_2
 
 ab -n 1000 -c 10 http://127.0.0.1:8080/
 

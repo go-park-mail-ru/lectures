@@ -17,7 +17,12 @@ type User struct {
 func UnpackReflect(u interface{}, data []byte) error {
 	r := bytes.NewReader(data)
 
-	val := reflect.ValueOf(u).Elem()
+	val := reflect.ValueOf(u)
+	if val.Kind() != reflect.Ptr {
+		return fmt.Errorf("input is not pointer")
+	}
+
+	val = val.Elem()
 
 	for i := 0; i < val.NumField(); i++ {
 		valueField := val.Field(i)
@@ -31,7 +36,7 @@ func UnpackReflect(u interface{}, data []byte) error {
 		case reflect.Int:
 			var value uint32
 			binary.Read(r, binary.LittleEndian, &value)
-			valueField.Set(reflect.ValueOf(int(value)))
+			valueField.SetInt(int64(value))
 		case reflect.String:
 			var lenRaw uint32
 			binary.Read(r, binary.LittleEndian, &lenRaw)
@@ -50,18 +55,18 @@ func UnpackReflect(u interface{}, data []byte) error {
 
 func main() {
 	/*
-		perl -E '$b = pack("L L/a* L", 1_123_456, "v.romanov", 16);
+		perl -E '$b = pack("L L/a* L", 1_123_456, "kek.kekovitch", 16);
 			print map { ord.", "  } split("", $b); '
 	*/
 	data := []byte{
 		128, 36, 17, 0,
 
-		9, 0, 0, 0,
-		118, 46, 114, 111, 109, 97, 110, 111, 118,
+		13, 0, 0, 0,
+		107, 101, 107, 46, 107, 101, 107, 111, 118, 105, 116, 99, 104,
 
 		16, 0, 0, 0,
 	}
-	u := new(User)
+	u := &User{}
 	err := UnpackReflect(u, data)
 	if err != nil {
 		panic(err)

@@ -32,8 +32,8 @@ var CoolGolangPublic = PublicPage{
 }
 
 var Pages = []PublicPage{
-	CoolGolangPublic, 
-	CoolGolangPublic, 
+	CoolGolangPublic,
+	CoolGolangPublic,
 	CoolGolangPublic,
 }
 
