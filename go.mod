@@ -8,7 +8,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gen1us2k/go-translit v0.0.0-20160120121136-46f1a0be552c
 	github.com/gin-gonic/gin v1.4.0
-	github.com/go-park-mail-ru/lecture1 v0.0.0-20180904131707-345db1aad93b // indirect
+	github.com/go-park-mail-ru/lecture1 v0.0.0-20180904131707-345db1aad93b
 	github.com/golang/protobuf v1.3.2
 	github.com/gorilla/mux v1.7.0
 	github.com/gorilla/schema v1.1.0
@@ -21,6 +21,7 @@ require (
 	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
+	github.com/satori/go.uuid v1.2.0
 	github.com/shiyanhui/hero v0.0.2
 	github.com/sirupsen/logrus v1.4.2
 	github.com/valyala/fasthttp v1.5.0 // indirect

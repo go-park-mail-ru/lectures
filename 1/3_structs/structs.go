@@ -18,8 +18,8 @@ type Account struct {
 func main() {
 	// полное объявление структуры
 	var acc Account = Account{
-		Id: 1,
-		// Name: "rvasily",
+		Id:   1,
+		Name: "rvasily",
 		Person: Person{
 			Name:    "Василий",
 			Address: "Москва",
