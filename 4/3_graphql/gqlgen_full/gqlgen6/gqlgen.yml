@@ -1,0 +1,22 @@
+schema:
+- schema.graphql
+exec:
+  filename: generated.go
+model:
+  filename: models_gen.go
+resolver:
+  filename: resolver.go
+  type: Resolver
+
+models:
+  Photo:
+    model: gqlgen6.Photo
+    fields:
+      user:
+        resolver: true
+  User:
+    fields:
+      photos:
+        resolver: true
+
+autobind: []

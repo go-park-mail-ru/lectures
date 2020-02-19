@@ -1,0 +1,42 @@
+type User {
+  id: ID!
+  name: String!
+  avatar: String!
+  followed: Boolean!
+
+  # subscriptions(count: Int! = 10): [User!]!
+  # subscribers(count: Int! = 10): [User!]!
+  """возвращает фотограции данного пользователя"""
+  photos(count: Int! = 10): [Photo!]!
+}
+
+type Photo {
+  id: ID!
+  user: User!
+  url: String!
+  comment: String!
+  rating: Int!
+  liked: Boolean!
+}
+
+type Query {
+  # query{timeline{id,url,user{id,name}}}
+  """возвращает ленту текущего пользователя - фото тех, на кого он подписан"""
+  timeline: [Photo!]!
+
+  # query{user(userID:"1"){id,name,avatar}}
+  """возвращает выбранного пользователя"""
+  user(userID: ID!): User!
+
+  # query{user(userID:"1"){id,avatar,name}}
+  """возвращает фотограции выбранного пользователя"""
+  photos(userID: ID!): [Photo!]!
+}
+
+type Mutation {
+  # mutation _{ratePhoto(photoID:"1", direction:"up"){id,url,rating,user{id,name}}}
+  ratePhoto(photoID: ID!, direction: String!): Photo!
+}
+
+# go run github.com/99designs/gqlgen init
+# go run github.com/99designs/gqlgen -v

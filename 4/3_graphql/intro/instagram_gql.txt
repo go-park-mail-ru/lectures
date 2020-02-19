@@ -1,0 +1,131 @@
+{"5095":"viewer() {
+    eligible_promotions.ig_parameters(<ig_parameters>).surface_nux_id(<surface>).external_gating_permitted_qps(<external_gating_permitted_qps>) {
+      edges {
+        priority,
+        time_range {
+          start,
+          end
+        },
+        node {
+          id,
+          promotion_id,
+          max_impressions,
+          triggers,
+          template {
+            name,
+            parameters {
+              name,
+              string_value
+            }
+          },
+          creatives {
+            title {
+              text
+            },
+            content {
+              text
+            },
+            footer {
+              text
+            },
+            social_context {
+              text
+            },
+            primary_action{
+              title {
+                text
+              },
+              url,
+              limit,
+              dismiss_promotion
+            },
+            secondary_action{
+              title {
+                text
+              },
+              url,
+              limit,
+              dismiss_promotion
+            },
+            dismiss_action{
+              title {
+                text
+              },
+              url,
+              limit,
+              dismiss_promotion
+            },
+            image {
+              uri
+            }
+          }
+        }
+      }
+    }
+
+}","5780":"viewer() {
+    eligible_promotions.ig_parameters(<ig_parameters>).surface_nux_id(<surface>).external_gating_permitted_qps(<external_gating_permitted_qps>) {
+      edges {
+        priority,
+        time_range {
+          start,
+          end
+        },
+        node {
+          id,
+          promotion_id,
+          max_impressions,
+          triggers,
+          template {
+            name,
+            parameters {
+              name,
+              string_value
+            }
+          },
+          creatives {
+            title {
+              text
+            },
+            content {
+              text
+            },
+            footer {
+              text
+            },
+            social_context {
+              text
+            },
+            primary_action{
+              title {
+                text
+              },
+              url,
+              limit,
+              dismiss_promotion
+            },
+            secondary_action{
+              title {
+                text
+              },
+              url,
+              limit,
+              dismiss_promotion
+            },
+            dismiss_action{
+              title {
+                text
+              },
+              url,
+              limit,
+              dismiss_promotion
+            },
+            image {
+              uri
+            }
+          }
+        }
+      }
+    }
+
+}"}
