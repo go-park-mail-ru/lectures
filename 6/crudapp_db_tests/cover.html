@@ -1,0 +1,894 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">crudapp/cmd/crudapp/main.go (0.0%)</option>
+				
+				<option value="file1">crudapp/pkg/handlers/items.go (11.6%)</option>
+				
+				<option value="file2">crudapp/pkg/handlers/items_mock.go (28.2%)</option>
+				
+				<option value="file3">crudapp/pkg/handlers/user.go (0.0%)</option>
+				
+				<option value="file4">crudapp/pkg/items/item.go (0.0%)</option>
+				
+				<option value="file5">crudapp/pkg/items/repo.go (30.0%)</option>
+				
+				<option value="file6">crudapp/pkg/middleware/accesslog.go (0.0%)</option>
+				
+				<option value="file7">crudapp/pkg/middleware/auth.go (0.0%)</option>
+				
+				<option value="file8">crudapp/pkg/middleware/panic.go (0.0%)</option>
+				
+				<option value="file9">crudapp/pkg/session/manager.go (0.0%)</option>
+				
+				<option value="file10">crudapp/pkg/session/session.go (0.0%)</option>
+				
+				<option value="file11">crudapp/pkg/user/user.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package main
+
+import (
+        "database/sql"
+        _ "github.com/go-sql-driver/mysql"
+        "html/template"
+        "net/http"
+
+        "crudapp/pkg/handlers"
+        "crudapp/pkg/items"
+        "crudapp/pkg/middleware"
+        "crudapp/pkg/session"
+        "crudapp/pkg/user"
+
+        "github.com/gorilla/mux"
+        "go.uber.org/zap"
+)
+
+func main() <span class="cov0" title="0">{
+
+        // основные настройки к базе
+        dsn := "root:love@tcp(localhost:3306)/golang?"
+        // указываем кодировку
+        dsn += "&amp;charset=utf8"
+        // отказываемся от prapared statements
+        // параметры подставляются сразу
+        dsn += "&amp;interpolateParams=true"
+
+        db, err := sql.Open("mysql", dsn)
+
+        db.SetMaxOpenConns(10)
+
+        err = db.Ping() // вот тут будет первое подключение к базе
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+
+        // -----
+
+        <span class="cov0" title="0">templates := template.Must(template.ParseGlob("./templates/*"))
+
+        sm := session.NewSessionsMem()
+        zapLogger, _ := zap.NewProduction()
+        defer zapLogger.Sync() // flushes buffer, if any
+        logger := zapLogger.Sugar()
+
+        userRepo := user.NewUserRepo()
+        itemsRepo := items.NewRepository(db)
+
+        userHandler := &amp;handlers.UserHandler{
+                Tmpl:     templates,
+                UserRepo: userRepo,
+                Logger:   logger,
+                Sessions: sm,
+        }
+
+        handlers := &amp;handlers.ItemsHandler{
+                Tmpl:      templates,
+                Logger:    logger,
+                ItemsRepo: itemsRepo,
+        }
+
+        r := mux.NewRouter()
+        r.HandleFunc("/", userHandler.Index).Methods("GET")
+        r.HandleFunc("/login", userHandler.Login).Methods("POST")
+        r.HandleFunc("/logout", userHandler.Logout).Methods("POST")
+
+        r.HandleFunc("/items", handlers.List).Methods("GET")
+        r.HandleFunc("/items/new", handlers.AddForm).Methods("GET")
+        r.HandleFunc("/items/new", handlers.Add).Methods("POST")
+        r.HandleFunc("/items/{id}", handlers.Edit).Methods("GET")
+        r.HandleFunc("/items/{id}", handlers.Update).Methods("POST")
+        r.HandleFunc("/items/{id}", handlers.Delete).Methods("DELETE")
+
+        mux := middleware.Auth(sm, r)
+        mux = middleware.AccessLog(logger, mux)
+        mux = middleware.Panic(mux)
+
+        addr := ":8080"
+        logger.Infow("starting server",
+                "type", "START",
+                "addr", addr,
+        )
+        http.ListenAndServe(addr, mux)</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package handlers
+
+import (
+        "encoding/json"
+        "html/template"
+        "net/http"
+        "strconv"
+
+        "crudapp/pkg/items"
+        "crudapp/pkg/session"
+
+        "github.com/gorilla/mux"
+        "github.com/gorilla/schema"
+        "go.uber.org/zap"
+)
+
+type ItemRepositoryInterface interface {
+        GetAll() ([]*items.Item, error)
+        GetByID(int64) (*items.Item, error)
+        Add(*items.Item) (int64, error)
+        Update(*items.Item) (int64, error)
+        Delete(int64) (int64, error)
+}
+
+type ItemsHandler struct {
+        Tmpl      *template.Template
+        ItemsRepo ItemRepositoryInterface
+        Logger    *zap.SugaredLogger
+}
+
+func (h *ItemsHandler) List(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        elems, err := h.ItemsRepo.GetAll()
+        if err != nil </span><span class="cov8" title="1">{
+                h.Logger.Error("GetAll err", err)
+                http.Error(w, `DB err`, http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov8" title="1">err = h.Tmpl.ExecuteTemplate(w, "index.html", struct {
+                Items []*items.Item
+        }{
+                Items: elems,
+        })
+        if err != nil </span><span class="cov8" title="1">{
+                h.Logger.Error("ExecuteTemplate err", err)
+                http.Error(w, `Template errror`, http.StatusInternalServerError)
+                return
+        }</span>
+}
+
+func (h *ItemsHandler) AddForm(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        err := h.Tmpl.ExecuteTemplate(w, "create.html", nil)
+        if err != nil </span><span class="cov0" title="0">{
+                h.Logger.Error("ExecuteTemplate err", err)
+                http.Error(w, `Template errror`, http.StatusInternalServerError)
+                return
+        }</span>
+}
+
+func (h *ItemsHandler) Add(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        r.ParseForm()
+        item := new(items.Item)
+        decoder := schema.NewDecoder()
+        decoder.IgnoreUnknownKeys(true)
+        err := decoder.Decode(item, r.PostForm)
+        if err != nil </span><span class="cov0" title="0">{
+                h.Logger.Error("Form err", err)
+                http.Error(w, `Bad form`, http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">lastID, err := h.ItemsRepo.Add(item)
+        if err != nil </span><span class="cov0" title="0">{
+                h.Logger.Error("Db err", err)
+                http.Error(w, `DB err`, http.StatusInternalServerError)
+                return
+        }</span>
+        <span class="cov0" title="0">h.Logger.Infof("Insert with id LastInsertId: %v", lastID)
+        http.Redirect(w, r, "/", http.StatusFound)</span>
+}
+
+func (h *ItemsHandler) Edit(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id, err := strconv.Atoi(vars["id"])
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, `{"error": "bad id"}`, http.StatusBadGateway)
+                return
+        }</span>
+
+        <span class="cov0" title="0">item, err := h.ItemsRepo.GetByID(int64(id))
+        if err != nil </span><span class="cov0" title="0">{
+                h.Logger.Error("Db err", err)
+                http.Error(w, `DB err`, http.StatusInternalServerError)
+                return
+        }</span>
+        <span class="cov0" title="0">if item == nil </span><span class="cov0" title="0">{
+                http.Error(w, `no item`, http.StatusNotFound)
+                return
+        }</span>
+
+        <span class="cov0" title="0">err = h.Tmpl.ExecuteTemplate(w, "edit.html", item)
+        if err != nil </span><span class="cov0" title="0">{
+                h.Logger.Error("ExecuteTemplate err", err)
+                http.Error(w, `Template errror`, http.StatusInternalServerError)
+                return
+        }</span>
+}
+
+func (h *ItemsHandler) Update(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id, err := strconv.Atoi(vars["id"])
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, `Bad id`, http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">r.ParseForm()
+        item := new(items.Item)
+        decoder := schema.NewDecoder()
+        decoder.IgnoreUnknownKeys(true)
+        err = decoder.Decode(item, r.PostForm)
+        if err != nil </span><span class="cov0" title="0">{
+                h.Logger.Error("Form err", err)
+                http.Error(w, `Bad form`, http.StatusBadRequest)
+                return
+        }</span>
+        <span class="cov0" title="0">item.ID = uint32(id)
+
+        sess, _ := session.SessionFromContext(r.Context())
+        item.SetUpdated(sess.UserID)
+
+        ok, err := h.ItemsRepo.Update(item)
+        if err != nil </span><span class="cov0" title="0">{
+                h.Logger.Error("Db err", err)
+                http.Error(w, `db error`, http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">h.Logger.Infof("update: %v %v", item, ok)
+
+        http.Redirect(w, r, "/", http.StatusFound)</span>
+}
+
+func (h *ItemsHandler) Delete(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        vars := mux.Vars(r)
+        id, err := strconv.Atoi(vars["id"])
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, `{"error": "bad id"}`, http.StatusBadGateway)
+                return
+        }</span>
+
+        <span class="cov0" title="0">affected, err := h.ItemsRepo.Delete(int64(id))
+        if err != nil </span><span class="cov0" title="0">{
+                h.Logger.Error("Db err", err)
+                http.Error(w, `{"error": "db error"}`, http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Content-type", "application/json")
+        respJSON, _ := json.Marshal(map[string]int64{
+                "updated": affected,
+        })
+        w.Write(respJSON)</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+// Source: items.go
+
+// Package handlers is a generated GoMock package.
+package handlers
+
+import (
+        gomock "github.com/golang/mock/gomock"
+        reflect "reflect"
+
+        "crudapp/pkg/items"
+)
+
+// MockItemRepository is a mock of ItemRepository interface
+type MockItemRepository struct {
+        ctrl     *gomock.Controller
+        recorder *MockItemRepositoryMockRecorder
+}
+
+// MockItemRepositoryMockRecorder is the mock recorder for MockItemRepository
+type MockItemRepositoryMockRecorder struct {
+        mock *MockItemRepository
+}
+
+// NewMockItemRepository creates a new mock instance
+func NewMockItemRepository(ctrl *gomock.Controller) *MockItemRepository <span class="cov8" title="1">{
+        mock := &amp;MockItemRepository{ctrl: ctrl}
+        mock.recorder = &amp;MockItemRepositoryMockRecorder{mock}
+        return mock
+}</span>
+
+// EXPECT returns an object that allows the caller to indicate expected use
+func (m *MockItemRepository) EXPECT() *MockItemRepositoryMockRecorder <span class="cov8" title="1">{
+        return m.recorder
+}</span>
+
+// GetAll mocks base method
+func (m *MockItemRepository) GetAll() ([]*items.Item, error) <span class="cov8" title="1">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "GetAll")
+        ret0, _ := ret[0].([]*items.Item)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// GetAll indicates an expected call of GetAll
+func (mr *MockItemRepositoryMockRecorder) GetAll() *gomock.Call <span class="cov8" title="1">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockItemRepository)(nil).GetAll))
+}</span>
+
+// GetByID mocks base method
+func (m *MockItemRepository) GetByID(arg0 int64) (*items.Item, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "GetByID", arg0)
+        ret0, _ := ret[0].(*items.Item)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// GetByID indicates an expected call of GetByID
+func (mr *MockItemRepositoryMockRecorder) GetByID(arg0 interface{}) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockItemRepository)(nil).GetByID), arg0)
+}</span>
+
+// Add mocks base method
+func (m *MockItemRepository) Add(arg0 *items.Item) (int64, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Add", arg0)
+        ret0, _ := ret[0].(int64)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// Add indicates an expected call of Add
+func (mr *MockItemRepositoryMockRecorder) Add(arg0 interface{}) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockItemRepository)(nil).Add), arg0)
+}</span>
+
+// Update mocks base method
+func (m *MockItemRepository) Update(arg0 *items.Item) (int64, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Update", arg0)
+        ret0, _ := ret[0].(int64)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// Update indicates an expected call of Update
+func (mr *MockItemRepositoryMockRecorder) Update(arg0 interface{}) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockItemRepository)(nil).Update), arg0)
+}</span>
+
+// Delete mocks base method
+func (m *MockItemRepository) Delete(arg0 int64) (int64, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Delete", arg0)
+        ret0, _ := ret[0].(int64)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// Delete indicates an expected call of Delete
+func (mr *MockItemRepositoryMockRecorder) Delete(arg0 interface{}) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockItemRepository)(nil).Delete), arg0)
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package handlers
+
+import (
+        "html/template"
+        "net/http"
+
+        "crudapp/pkg/session"
+        "crudapp/pkg/user"
+
+        "go.uber.org/zap"
+)
+
+type UserHandler struct {
+        Tmpl     *template.Template
+        Logger   *zap.SugaredLogger
+        UserRepo *user.UserRepo
+        Sessions *session.SessionsManager
+}
+
+func (h *UserHandler) Index(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        _, err := session.SessionFromContext(r.Context())
+        if err == nil </span><span class="cov0" title="0">{
+                http.Redirect(w, r, "/items", 302)
+                return
+        }</span>
+
+        <span class="cov0" title="0">err = h.Tmpl.ExecuteTemplate(w, "login.html", nil)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, `Template errror`, http.StatusInternalServerError)
+                return
+        }</span>
+}
+
+func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        u, err := h.UserRepo.Authorize(r.FormValue("login"), r.FormValue("password"))
+        if err == user.ErrNoUser </span><span class="cov0" title="0">{
+                http.Error(w, `no user`, http.StatusBadRequest)
+                return
+        }</span>
+        <span class="cov0" title="0">if err == user.ErrBadPass </span><span class="cov0" title="0">{
+                http.Error(w, `bad pass`, http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">sess, _ := h.Sessions.Create(w, u.ID)
+        h.Logger.Infof("created session for %v", sess.UserID)
+        http.Redirect(w, r, "/", 302)</span>
+}
+
+func (h *UserHandler) Logout(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        h.Sessions.DestroyCurrent(w, r)
+        http.Redirect(w, r, "/", 302)
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package items
+
+import (
+        "database/sql"
+        "strconv"
+)
+
+type Item struct {
+        ID          uint32
+        Title       string
+        Description string
+        Updated     sql.NullString
+}
+
+// позволяет items handlers не импортировать sql
+func (it *Item) SetUpdated(val uint32) <span class="cov0" title="0">{
+        it.Updated = sql.NullString{String: strconv.Itoa(int(val))}
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package items
+
+import (
+        "database/sql"
+)
+
+type ItemRepository struct {
+        DB *sql.DB
+}
+
+func NewRepository(db *sql.DB) *ItemRepository <span class="cov0" title="0">{
+        return &amp;ItemRepository{DB: db}
+}</span>
+
+func (repo *ItemRepository) GetAll() ([]*Item, error) <span class="cov0" title="0">{
+        items := []*Item{}
+        rows, err := repo.DB.Query("SELECT id, title, updated FROM items")
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">defer rows.Close() // надо закрывать соединение, иначе будет течь
+        for rows.Next() </span><span class="cov0" title="0">{
+                post := &amp;Item{}
+                err = rows.Scan(&amp;post.ID, &amp;post.Title, &amp;post.Updated)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov0" title="0">items = append(items, post)</span>
+        }
+        <span class="cov0" title="0">return items, nil</span>
+}
+
+func (repo *ItemRepository) GetByID(id int64) (*Item, error) <span class="cov8" title="1">{
+        post := &amp;Item{}
+        // QueryRow сам закрывает коннект
+        err := repo.DB.
+                QueryRow("SELECT id, title, updated, description FROM items WHERE id = ?", id).
+                Scan(&amp;post.ID, &amp;post.Title, &amp;post.Updated, &amp;post.Description)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">return post, nil</span>
+}
+
+func (repo *ItemRepository) Add(elem *Item) (int64, error) <span class="cov8" title="1">{
+        result, err := repo.DB.Exec(
+                "INSERT INTO items (`title`, `description`) VALUES (?, ?)",
+                elem.Title,
+                elem.Description,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return 0, err
+        }</span>
+        <span class="cov8" title="1">return result.LastInsertId()</span>
+}
+
+func (repo *ItemRepository) Update(elem *Item) (int64, error) <span class="cov0" title="0">{
+        result, err := repo.DB.Exec(
+                "UPDATE items SET"+
+                        "`title` = ?"+
+                        ",`description` = ?"+
+                        ",`updated` = ?"+
+                        "WHERE id = ?",
+                elem.Title,
+                elem.Description,
+                "rvasily",
+                elem.ID,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return result.RowsAffected()</span>
+}
+
+func (repo *ItemRepository) Delete(id int64) (int64, error) <span class="cov0" title="0">{
+        result, err := repo.DB.Exec(
+                "DELETE FROM items WHERE id = ?",
+                id,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return result.RowsAffected()</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package middleware
+
+import (
+        // "fmt"
+        "net/http"
+        "time"
+
+        "go.uber.org/zap"
+)
+
+func AccessLog(logger *zap.SugaredLogger, next http.Handler) http.Handler <span class="cov0" title="0">{
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                // fmt.Println("access log middleware")
+                start := time.Now()
+                next.ServeHTTP(w, r)
+                logger.Infow("New request",
+                        "method", r.Method,
+                        "remote_addr", r.RemoteAddr,
+                        "url", r.URL.Path,
+                        "time", time.Since(start),
+                )
+        }</span>)
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package middleware
+
+import (
+        "context"
+        // "fmt"
+        "net/http"
+
+        "crudapp/pkg/session"
+)
+
+var (
+        noAuthUrls = map[string]struct{}{
+                "/login": struct{}{},
+        }
+        noSessUrls = map[string]struct{}{
+                "/": struct{}{},
+        }
+)
+
+func Auth(sm *session.SessionsManager, next http.Handler) http.Handler <span class="cov0" title="0">{
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                // fmt.Println("auth middleware")
+                if _, ok := noAuthUrls[r.URL.Path]; ok </span><span class="cov0" title="0">{
+                        next.ServeHTTP(w, r)
+                        return
+                }</span>
+                <span class="cov0" title="0">sess, err := sm.Check(r)
+                _, canbeWithouthSess := noSessUrls[r.URL.Path]
+                if err != nil &amp;&amp; !canbeWithouthSess </span><span class="cov0" title="0">{
+                        // fmt.Println("no auth")
+                        http.Redirect(w, r, "/", 302)
+                        return
+                }</span>
+                <span class="cov0" title="0">ctx := context.WithValue(r.Context(), session.SessionKey, sess)
+                next.ServeHTTP(w, r.WithContext(ctx))</span>
+        })
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package middleware
+
+import (
+        "net/http"
+)
+
+func Panic(next http.Handler) http.Handler <span class="cov0" title="0">{
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                // fmt.Println("panicMiddleware", r.URL.Path)
+                defer func() </span><span class="cov0" title="0">{
+                        if err := recover(); err != nil </span><span class="cov0" title="0">{
+                                // fmt.Println("recovered", err)
+                                http.Error(w, "Internal server error", 500)
+                        }</span>
+                }()
+                <span class="cov0" title="0">next.ServeHTTP(w, r)</span>
+        })
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package session
+
+import (
+        "net/http"
+        "sync"
+        "time"
+)
+
+type SessionsManager struct {
+        data map[string]*Session
+        mu   *sync.RWMutex
+}
+
+func NewSessionsMem() *SessionsManager <span class="cov0" title="0">{
+        return &amp;SessionsManager{
+                data: make(map[string]*Session, 10),
+                mu:   &amp;sync.RWMutex{},
+        }
+}</span>
+
+func (sm *SessionsManager) Check(r *http.Request) (*Session, error) <span class="cov0" title="0">{
+        sessionCookie, err := r.Cookie("session_id")
+        if err == http.ErrNoCookie </span><span class="cov0" title="0">{
+                return nil, ErrNoAuth
+        }</span>
+
+        <span class="cov0" title="0">sm.mu.RLock()
+        sess, ok := sm.data[sessionCookie.Value]
+        sm.mu.RUnlock()
+
+        if !ok </span><span class="cov0" title="0">{
+                return nil, ErrNoAuth
+        }</span>
+
+        <span class="cov0" title="0">return sess, nil</span>
+}
+
+func (sm *SessionsManager) Create(w http.ResponseWriter, userID uint32) (*Session, error) <span class="cov0" title="0">{
+        sess := NewSession(userID)
+
+        sm.mu.Lock()
+        sm.data[sess.ID] = sess
+        sm.mu.Unlock()
+
+        cookie := &amp;http.Cookie{
+                Name:    "session_id",
+                Value:   sess.ID,
+                Expires: time.Now().Add(90 * 24 * time.Hour),
+                Path:    "/",
+        }
+        http.SetCookie(w, cookie)
+        return sess, nil
+}</span>
+
+func (sm *SessionsManager) DestroyCurrent(w http.ResponseWriter, r *http.Request) error <span class="cov0" title="0">{
+        sess, err := SessionFromContext(r.Context())
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">sm.mu.Lock()
+        delete(sm.data, sess.ID)
+        sm.mu.Unlock()
+
+        cookie := http.Cookie{
+                Name:    "session_id",
+                Expires: time.Now().AddDate(0, 0, -1),
+                Path:    "/",
+        }
+        http.SetCookie(w, &amp;cookie)
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package session
+
+import (
+        "context"
+        "crypto/rand"
+        "errors"
+        "fmt"
+)
+
+type Session struct {
+        ID     string
+        UserID uint32
+}
+
+func NewSession(userID uint32) *Session <span class="cov0" title="0">{
+        // лучше генерировать из заданного алфавита, но так писать меньше и для учебного примера ОК
+        randID := make([]byte, 16)
+        rand.Read(randID)
+
+        return &amp;Session{
+                ID:     fmt.Sprintf("%x", randID),
+                UserID: userID,
+        }
+}</span>
+
+var (
+        ErrNoAuth = errors.New("No session found")
+)
+
+type sessKey string
+
+var SessionKey sessKey = "sessionKey"
+
+func SessionFromContext(ctx context.Context) (*Session, error) <span class="cov0" title="0">{
+        sess, ok := ctx.Value(SessionKey).(*Session)
+        if !ok || sess == nil </span><span class="cov0" title="0">{
+                return nil, ErrNoAuth
+        }</span>
+        <span class="cov0" title="0">return sess, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package user
+
+import "errors"
+
+type User struct {
+        ID       uint32
+        Login    string
+        password string
+}
+
+type UserRepo struct {
+        data map[string]*User
+}
+
+func NewUserRepo() *UserRepo <span class="cov0" title="0">{
+        return &amp;UserRepo{
+                data: map[string]*User{
+                        "rvasily": &amp;User{
+                                ID:       1,
+                                Login:    "rvasily",
+                                password: "love",
+                        },
+                },
+        }
+}</span>
+
+var (
+        ErrNoUser  = errors.New("No user found")
+        ErrBadPass = errors.New("Invald password")
+)
+
+func (repo *UserRepo) Authorize(login, pass string) (*User, error) <span class="cov0" title="0">{
+        u, ok := repo.data[login]
+        if !ok </span><span class="cov0" title="0">{
+                return nil, ErrNoUser
+        }</span>
+
+        // dont do this un production :)
+        <span class="cov0" title="0">if u.password != pass </span><span class="cov0" title="0">{
+                return nil, ErrBadPass
+        }</span>
+
+        <span class="cov0" title="0">return u, nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
