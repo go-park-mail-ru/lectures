@@ -45,6 +45,7 @@ func main() {
 	})
 
 	http.HandleFunc("/notifications", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("ws upgrade")
 		ws, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Fatal(err)

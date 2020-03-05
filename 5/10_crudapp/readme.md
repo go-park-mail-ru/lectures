@@ -1,3 +1,4 @@
+``` bash
 go mod init crudapp
 # go mod init github.com/rvasily/crudapp
 go build
@@ -11,3 +12,4 @@ go test -v -coverpkg=./... ./...
 go mod vendor
 go build -mod=vendor -o ./bin/myapp ./cmd/myapp
 go test -v -mod=vendor -coverpkg=./... ./...
+```

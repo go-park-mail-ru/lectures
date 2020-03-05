@@ -19,6 +19,7 @@ require (
 	github.com/hashicorp/consul/api v1.2.0
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
 	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428
+	github.com/julienschmidt/httprouter v1.3.0 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/satori/go.uuid v1.2.0
