@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	_ "github.com/go-park-mail-ru/lecture1/5_visibility/person"
+	_ "github.com/go-park-mail-ru/lectures/1/5_visibility/person"
 )
 
 func init() {

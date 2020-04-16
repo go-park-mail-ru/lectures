@@ -1,0 +1,34 @@
+type User {
+  id: ID!
+  name: String!
+  avatar: String!
+  followed: Boolean!
+}
+
+type Photo {
+  id: ID!
+  user: User!
+  url: String!
+  comment: String!
+  rating: Int!
+  liked: Boolean!
+}
+
+type Query {
+  # query{timeline{id,url,user{id,name}}}
+  timeline: [Photo!]!
+
+  # query{user(userID:"1"){id,url,user{id,name}}}
+  user(userID: ID!): User!
+
+  # query{user(userID:"1"){id,avatar,name}}
+  photos(userID: ID!): [Photo!]!
+}
+
+type Mutation {
+  # mutation _{ratePhoto(photoID:"1", direction:"up"){id,url,rating,user{id,name}}}
+  ratePhoto(photoID: ID!, direction: String!): Photo!
+}
+
+# go run github.com/99designs/gqlgen init
+# go run github.com/99designs/gqlgen -v

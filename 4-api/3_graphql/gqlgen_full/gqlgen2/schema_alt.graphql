@@ -1,0 +1,41 @@
+directive @goModel(model: String, models: [String!]) on OBJECT 
+    | INPUT_OBJECT 
+    | SCALAR 
+    | ENUM 
+    | INTERFACE 
+    | UNION
+
+directive @goField(forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION 
+    | FIELD_DEFINITION
+
+type User {
+  id: ID!
+  name: String!
+  avatar: String
+}
+
+type Photo @goModel(model:"coursera/3p/graphql/gqlgen2.Photo") {
+  id: ID!
+  user: User! @goField(forceResolver: true)
+  url: String!
+  comment: String!
+  rating: Int!
+  liked: Boolean!
+  followed: Boolean!
+}
+
+type Query {
+  # query{timeline{id,url,user{id,name}}}
+  timeline: [Photo!]!
+
+  # query{user(userID:"1"){id,url,user{id,name}}}
+  user(userID: ID!): User!
+
+  # query{user(userID:"1"){id,avatar,name}}
+  photos(userID: ID!): [Photo!]!
+}
+
+type Mutation {
+  # mutation _{ratePhoto(photoID:"1", direction:"up"){id,url,rating,user{id,name}}}
+  ratePhoto(photoID: ID!, direction: String!): Photo!
+}

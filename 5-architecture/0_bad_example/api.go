@@ -103,21 +103,14 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func PanicMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer func() {
-			if err := recover(); err != nil {
-				log.Printf("panic during request: %s", err)
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("internal error"))
-			}
-		}()
-
-		next.ServeHTTP(w, r)
-	})
-}
-
 func allUsersHandler(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Printf("panic during request: %s", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("internal error"))
+		}
+	}()
 
 	requestID := genRequestID()
 	log.Printf("incoming request [rid=%s] %s %q", requestID, r.Method, r.URL)
@@ -190,8 +183,6 @@ func main() {
 	userMux.HandleFunc("/users", allUsersHandler)
 	userMux.HandleFunc("/todo", todoHandler)
 
-	result := PanicMiddleware(userMux)
-
 	log.Println("listening on 127.0.0.1:8080")
-	log.Fatal(http.ListenAndServe("127.0.0.1:8080", result))
+	log.Fatal(http.ListenAndServe("127.0.0.1:8080", userMux))
 }

@@ -1,0 +1,54 @@
+go run github.com/99designs/gqlgen init
+
+go run github.com/99designs/gqlgen -v
+
+go generate ./...
+
+
+
+dataloaden coursera/3p/graphql/gqlgen3.User
+
+https://github.com/99designs/gqlgen/blob/master/example/dataloader/dataloaders.go
+go run github.com/vektah/dataloaden UserLoader uint *coursera/3p/graphql/gqlgen3.User
+
+
+
+
+
+
+  uploadPhoto(comment: String!, file: Upload!) Photo!
+
+
+curl localhost:8080/graphql \
+  -F operations='{ "query": "mutation ($file: Upload!) { singleUpload(file: $file) { id } }", "variables": { "file": null } }' \
+  -F map='{ "0": ["variables.file"] }' \
+  -F 0=@../photo_samples/building_1.jpg
+
+
+{
+  query: `
+    mutation($file: Upload!) {
+      singleUpload(file: $file) {
+        id
+      }
+    }
+  `,
+  variables: {
+    file: File // a.txt
+  }
+}
+
+
+
+
+https://99designs.com/blog/engineering/gqlgen-a-graphql-server-generator-for-go/
+
+
+
+https://github.com/99designs/gqlgen
+
+
+
+query{timeline{id,url,user{id,name}}}
+query{user(userID:"1"){id,avatar, name}}
+mutation _{ratePhoto(photoID:"1", direction:"up"){id,url,rating,user{id,name}}}

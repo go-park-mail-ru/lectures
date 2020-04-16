@@ -45,7 +45,7 @@
         msgs.insertBefore(node, msgs.childNodes[0]);
     }
 
-    conn = new WebSocket("ws://127.0.0.1:8080/notifications");
+    conn = new WebSocket("ws://localhost:8080/notifications");
     conn.onmessage = function (event) {
         newMessage(JSON.parse(event.data));
     };

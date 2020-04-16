@@ -1,0 +1,81 @@
+query {
+  user(userID: "1") {
+    id
+    name
+    avatar
+  }
+}
+
+# -----
+
+query {
+  user(userID: "1") {
+    id
+    name
+    avatar
+    photos {
+      id
+      url
+      user {
+        id
+        name
+        photos {
+          id
+          url
+        }
+      }
+    }
+  }
+}
+
+# -----
+
+query {
+  user(userID: "1") {
+    id
+    name
+    avatar
+    photos(count:20) {
+      id
+      url
+      user {
+        id
+        name
+        photos(count:100) {
+          id
+          url
+        }
+      }
+    }
+  }
+}
+
+# ----
+
+query getFullUser($userID: ID!, $cnt1:Int!, $cnt2:Int! ) {
+  user(userID: $userID) {
+    id
+    name
+    avatar
+    photos(count:$cnt1) {
+      id
+      url
+      user {
+        id
+        name
+        photos(count:$cnt2) {
+          id
+          url
+        }
+      }
+    }
+  }
+  photos(userID:$userID) {id, url}
+}
+
+
+{
+  "userID":"1",
+  "cnt1":10,
+  "cnt2":20
+}
