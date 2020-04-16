@@ -6,8 +6,9 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Привет, мир!")
-	w.Write([]byte("!!!"))
+	w.Header().Set("Content-Type", "application/json")
+	// fmt.Fprintln(w, "<h1>Привет, мир!</h1>")
+	w.Write([]byte("{}"))
 }
 
 func main() {

@@ -23,8 +23,9 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 	expiration := time.Now().Add(10 * time.Hour)
 	cookie := http.Cookie{
 		Name:    "session_id",
-		Value:   "rvasily",
+		Value:   "Dmitry",
 		Expires: expiration,
+		HttpOnly: true,
 	}
 	http.SetCookie(w, &cookie)
 	http.Redirect(w, r, "/", http.StatusFound)

@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"sync"
+	"time"
 
 	"google.golang.org/grpc"
 
@@ -39,7 +40,7 @@ func main() {
 			stream.Send(&translit.Word{
 				Word: w,
 			})
-			// time.Sleep(2 * time.Second)
+			time.Sleep(2 * time.Second)
 		}
 		stream.CloseSend()
 		fmt.Println("\tsend done")

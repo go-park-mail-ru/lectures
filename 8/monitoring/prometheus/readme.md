@@ -3,6 +3,10 @@
 docker run -p 9090:9090 -d --name prometheus --network monitoring -v $(pwd)/prometheus:/etc/config prom/prometheus --config.file=/etc/config/prometheus.yml
 ```
 
+```
+docker run -p 9090:9090 -it --name prometheus --network monitoring -v $(pwd)/prometheus:/etc/config prom/prometheus --config.file=/etc/config/prometheus.yml
+```
+
 # Run alert manager
 ```
 docker run -d -p 9093:9093 -v $(pwd)/alertmanager:/etc/config --network monitoring --name alertmanager prom/alertmanager --config.file=/etc/config/alertmanager.yml

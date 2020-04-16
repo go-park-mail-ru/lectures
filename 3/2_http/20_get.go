@@ -6,14 +6,8 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	myParam := r.URL.Query().Get("param")
-	if myParam != "" {
-		fmt.Fprintln(w, "`myParam` is", myParam)
-	}
-
-	key := r.FormValue("key")
-	if key != "" {
-		fmt.Fprintln(w, "`key` is", key)
+	for key, value := range r.URL.Query() {
+		fmt.Println(key, value)
 	}
 }
 

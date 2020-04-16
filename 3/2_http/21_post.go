@@ -23,8 +23,8 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// r.ParseForm()
-	// inputLogin := r.Form["login"][0]
+	r.ParseForm()
+	inputLogin :=r.Form["login"][0]
 
 	inputLogin := r.FormValue("login")
 	fmt.Fprintln(w, "you enter: ", inputLogin)
