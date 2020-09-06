@@ -1,8 +1,7 @@
-1
-2
-3
-3
-3
-3
-4
-5
+I love music.
+A love music.
+C love music.
+
+I love music of Kartik.
+We love music of Kartik.
+Thanks.
