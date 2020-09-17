@@ -9,9 +9,7 @@ func main() {
 	ch1 <- 1
 	ch1 <- 2
 	ch2 := make(chan int, 2)
-	fmt.Println(len(ch1), len(ch2))
 	ch2 <- 3
-	fmt.Println(len(ch1), len(ch2))
 LOOP:
 	for {
 		select {

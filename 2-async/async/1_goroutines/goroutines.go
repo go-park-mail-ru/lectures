@@ -8,22 +8,23 @@ import (
 )
 
 const (
-	iterationsNum = 4
-	goroutinesNum = 4
+	iterationsNum = 6
+	goroutinesNum = 6
 )
 
-func doIT(th int) {
+func doWork(th int) {
 	for j := 0; j < iterationsNum; j++ {
 		fmt.Printf(formatWork(th, j))
 		time.Sleep(time.Millisecond)
+		// runtime.Gosched()
 	}
 }
 
 func main() {
+	runtime.GOMAXPROCS(1)
 	for i := 0; i < goroutinesNum; i++ {
-		go doIT(i)
+		go doWork(i)
 	}
-	fmt.Scanln()
 }
 
 func formatWork(in, j int) string {

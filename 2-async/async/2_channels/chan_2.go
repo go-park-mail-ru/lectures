@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	in := make(chan int, 10)
+	in := make(chan int, 1)
 
 	go func(out chan<- int) {
 		for i := 0; i <= 10; i++ {
@@ -13,20 +13,12 @@ func main() {
 			out <- i
 			fmt.Println("after", i)
 		}
+		// out <- 12
 		close(out)
 		fmt.Println("generator finish")
 	}(in)
 
 	for i := range in {
-		fmt.Println("\tget", i)
-	}
-
-	for j := 0; i <= 5; j++ {
-		i, isClosed := <-in
-		if !isClosed {
-			fmt.Println("\tchan closed", i)
-			break
-		}
 		fmt.Println("\tget", i)
 	}
 

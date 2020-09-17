@@ -16,17 +16,17 @@ const (
 
 func startWorker(in int, wg *sync.WaitGroup, quotaCh chan struct{}) {
 	quotaCh <- struct{}{} // ratelim.go, берём свободный слот
+
 	defer wg.Done()
 	for j := 0; j < iterationsNum; j++ {
 		fmt.Printf(formatWork(in, j))
 
-		if j%2 == 0 {
-			<-quotaCh             // ratelim.go, возвращаем слот
-			quotaCh <- struct{}{} // ratelim.go, берём слот
-		}
+		<-quotaCh
+		quotaCh <- struct{}{}
 
 		runtime.Gosched() // даём поработать другим горутинам
 	}
+
 	<-quotaCh // ratelim.go, возвращаем слот
 }
 

@@ -9,13 +9,12 @@ import (
 
 func worker(ctx context.Context, workerNum int, out chan<- int) {
 	waitTime := time.Duration(rand.Intn(100)+10) * time.Millisecond
-	fmt.Println(workerNum, "sleep", waitTime)
+	fmt.Println(workerNum, "студент ", waitTime)
 	select {
 	case <-ctx.Done():
-		fmt.Println("worker", workerNum, "finished by ctx.DOne")
 		return
 	case <-time.After(waitTime):
-		fmt.Println("worker", workerNum, "done")
+		fmt.Println("студент", workerNum, "придумал вопрос")
 		out <- workerNum
 	}
 }
@@ -37,9 +36,9 @@ LOOP:
 			break LOOP
 		case foundBy := <-result:
 			totalFound++
-			fmt.Println("result found by", foundBy)
+			fmt.Println("студент", foundBy, "задал вопрос")
 		}
 	}
-	fmt.Println("totalFound", totalFound)
+	fmt.Println("всего вопросов", totalFound)
 	time.Sleep(time.Second)
 }

@@ -9,7 +9,7 @@ import (
 var totalOperations int32
 
 func inc() {
-	atomic.AddInt32(&totalOperations, 1) // автомарно
+	atomic.AddInt32(&totalOperations, 1) // атомарно
 }
 
 func main() {

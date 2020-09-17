@@ -1,8 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"runtime"
+)
 
 func main() {
+	runtime.GOMAXPROCS(1)
 	var counters = map[int]int{}
 	for i := 0; i < 5; i++ {
 		go func(counters map[int]int, th int) {
