@@ -1,4 +1,4 @@
-package session
+package models
 
 import (
 	"context"

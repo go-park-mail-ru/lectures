@@ -1,13 +1,13 @@
-package handlers
+package delivery
 
 import (
+	"crudapp/internal/pkg/items"
 	"encoding/json"
 	"html/template"
 	"net/http"
 	"strconv"
 
-	"crudapp/pkg/items"
-	"crudapp/pkg/session"
+	"crudapp/internal/pkg/models"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
@@ -16,7 +16,7 @@ import (
 
 type ItemsHandler struct {
 	Tmpl      *template.Template
-	ItemsRepo *items.ItemsRepo
+	ItemsRepo items.Repository
 	Logger    *zap.SugaredLogger
 }
 
@@ -28,7 +28,7 @@ func (h *ItemsHandler) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = h.Tmpl.ExecuteTemplate(w, "index.html", struct {
-		Items []*items.Item
+		Items []*models.Item
 	}{
 		Items: elems,
 	})
@@ -48,7 +48,7 @@ func (h *ItemsHandler) AddForm(w http.ResponseWriter, r *http.Request) {
 
 func (h *ItemsHandler) Add(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	item := new(items.Item)
+	item := new(models.Item)
 	decoder := schema.NewDecoder()
 	decoder.IgnoreUnknownKeys(true)
 	err := decoder.Decode(item, r.PostForm)
@@ -57,7 +57,7 @@ func (h *ItemsHandler) Add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sess, _ := session.SessionFromContext(r.Context())
+	sess, _ := models.SessionFromContext(r.Context())
 	item.CreatedBy = sess.UserID
 
 	lastID, err := h.ItemsRepo.Add(item)
@@ -103,7 +103,7 @@ func (h *ItemsHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.ParseForm()
-	item := new(items.Item)
+	item := new(models.Item)
 	decoder := schema.NewDecoder()
 	decoder.IgnoreUnknownKeys(true)
 	err = decoder.Decode(item, r.PostForm)

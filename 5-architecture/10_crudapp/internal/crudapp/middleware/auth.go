@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"crudapp/pkg/session"
+	"crudapp/internal/pkg/models"
+	"crudapp/internal/pkg/session"
 )
 
 var (
@@ -31,7 +32,7 @@ func Auth(sm *session.SessionsManager, next http.Handler) http.Handler {
 			http.Redirect(w, r, "/", 302)
 			return
 		}
-		ctx := context.WithValue(r.Context(), session.SessionKey, sess)
+		ctx := context.WithValue(r.Context(), models.SessionKey, sess)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

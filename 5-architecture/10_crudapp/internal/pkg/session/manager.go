@@ -1,27 +1,28 @@
 package session
 
 import (
+	"crudapp/internal/pkg/models"
 	"net/http"
 	"sync"
 	"time"
 )
 
 type SessionsManager struct {
-	data map[string]*Session
+	data map[string]*models.Session
 	mu   *sync.RWMutex
 }
 
 func NewSessionsMem() *SessionsManager {
 	return &SessionsManager{
-		data: make(map[string]*Session, 10),
+		data: make(map[string]*models.Session, 10),
 		mu:   &sync.RWMutex{},
 	}
 }
 
-func (sm *SessionsManager) Check(r *http.Request) (*Session, error) {
+func (sm *SessionsManager) Check(r *http.Request) (*models.Session, error) {
 	sessionCookie, err := r.Cookie("session_id")
 	if err == http.ErrNoCookie {
-		return nil, ErrNoAuth
+		return nil, models.ErrNoAuth
 	}
 
 	sm.mu.RLock()
@@ -29,14 +30,14 @@ func (sm *SessionsManager) Check(r *http.Request) (*Session, error) {
 	sm.mu.RUnlock()
 
 	if !ok {
-		return nil, ErrNoAuth
+		return nil, models.ErrNoAuth
 	}
 
 	return sess, nil
 }
 
-func (sm *SessionsManager) Create(w http.ResponseWriter, userID uint32) (*Session, error) {
-	sess := NewSession(userID)
+func (sm *SessionsManager) Create(w http.ResponseWriter, userID uint32) (*models.Session, error) {
+	sess := models.NewSession(userID)
 
 	sm.mu.Lock()
 	sm.data[sess.ID] = sess
@@ -53,7 +54,7 @@ func (sm *SessionsManager) Create(w http.ResponseWriter, userID uint32) (*Sessio
 }
 
 func (sm *SessionsManager) DestroyCurrent(w http.ResponseWriter, r *http.Request) error {
-	sess, err := SessionFromContext(r.Context())
+	sess, err := models.SessionFromContext(r.Context())
 	if err != nil {
 		return err
 	}

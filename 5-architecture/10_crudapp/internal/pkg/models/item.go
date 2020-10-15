@@ -1,4 +1,4 @@
-package items
+package models
 
 type Item struct {
 	ID          uint32 `schema:"-"`

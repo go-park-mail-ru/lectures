@@ -1,33 +1,27 @@
-package items
+package repository
+
+import "crudapp/internal/pkg/models"
 
 // WARNING! completly unsafe in multi-goroutine use, need add mutexes
 
-//go:generate mockgen -destination=./mock_repo.go -package=items crudapp/pkg/items ItemsRepo
-
-type ItemsRepo interface {
-	GetAll() ([]*Item, error)
-	GetByID(id uint32) (*Item, error)
-	Add(item *Item) (uint32, error)
-	Update(newItem *Item) (bool, error)
-	Delete(id uint32) (bool, error)
-}
+//go:generate mockgen -destination=./mock_repo.go -package=items crudapp/pkg/items models.ItemsRepo
 
 type itemsRepo struct {
 	lastID uint32
-	data   []*Item
+	data   []*models.Item
 }
 
 func NewRepo() *itemsRepo {
 	return &itemsRepo{
-		data: make([]*Item, 0, 10),
+		data: make([]*models.Item, 0, 10),
 	}
 }
 
-func (repo *itemsRepo) GetAll() ([]*Item, error) {
+func (repo *itemsRepo) GetAll() ([]*models.Item, error) {
 	return repo.data, nil
 }
 
-func (repo *itemsRepo) GetByID(id uint32) (*Item, error) {
+func (repo *itemsRepo) GetByID(id uint32) (*models.Item, error) {
 	for _, item := range repo.data {
 		if item.ID == id {
 			return item, nil
@@ -36,14 +30,14 @@ func (repo *itemsRepo) GetByID(id uint32) (*Item, error) {
 	return nil, nil
 }
 
-func (repo *itemsRepo) Add(item *Item) (uint32, error) {
+func (repo *itemsRepo) Add(item *models.Item) (uint32, error) {
 	repo.lastID++
 	item.ID = repo.lastID
 	repo.data = append(repo.data, item)
 	return repo.lastID, nil
 }
 
-func (repo *itemsRepo) Update(newItem *Item) (bool, error) {
+func (repo *itemsRepo) Update(newItem *models.Item) (bool, error) {
 	for _, item := range repo.data {
 		if item.ID != newItem.ID {
 			continue

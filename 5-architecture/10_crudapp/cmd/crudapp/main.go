@@ -4,11 +4,12 @@ import (
 	"html/template"
 	"net/http"
 
-	"crudapp/pkg/handlers"
-	"crudapp/pkg/items"
-	"crudapp/pkg/middleware"
-	"crudapp/pkg/session"
-	"crudapp/pkg/user"
+	"crudapp/internal/crudapp/middleware"
+	items_delivery "crudapp/internal/pkg/items/delivery"
+	items_repo "crudapp/internal/pkg/items/repository"
+	"crudapp/internal/pkg/session"
+	user_delivery "crudapp/internal/pkg/user/delivery"
+	user_repo "crudapp/internal/pkg/user/repository"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -22,17 +23,17 @@ func main() {
 	defer zapLogger.Sync() // flushes buffer, if any
 	logger := zapLogger.Sugar()
 
-	userRepo := user.NewUserRepo()
-	itemsRepo := items.NewRepo()
+	userRepo := user_repo.NewUserRepo()
+	itemsRepo := items_repo.NewRepo()
 
-	userHandler := &handlers.UserHandler{
+	userHandler := &user_delivery.UserHandler{
 		Tmpl:     templates,
 		UserRepo: userRepo,
 		Logger:   logger,
 		Sessions: sm,
 	}
 
-	handlers := &handlers.ItemsHandler{
+	handlers := &items_delivery.ItemsHandler{
 		Tmpl:      templates,
 		Logger:    logger,
 		ItemsRepo: itemsRepo,

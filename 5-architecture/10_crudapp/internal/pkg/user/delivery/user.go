@@ -1,11 +1,12 @@
-package handlers
+package delivery
 
 import (
+	"crudapp/internal/pkg/models"
+	"crudapp/internal/pkg/user"
 	"html/template"
 	"net/http"
 
-	"crudapp/pkg/session"
-	"crudapp/pkg/user"
+	"crudapp/internal/pkg/session"
 
 	"go.uber.org/zap"
 )
@@ -13,12 +14,12 @@ import (
 type UserHandler struct {
 	Tmpl     *template.Template
 	Logger   *zap.SugaredLogger
-	UserRepo *user.UserRepo
+	UserRepo user.Repository
 	Sessions *session.SessionsManager
 }
 
 func (h *UserHandler) Index(w http.ResponseWriter, r *http.Request) {
-	_, err := session.SessionFromContext(r.Context())
+	_, err := models.SessionFromContext(r.Context())
 	if err == nil {
 		http.Redirect(w, r, "/items", 302)
 		return
@@ -33,11 +34,11 @@ func (h *UserHandler) Index(w http.ResponseWriter, r *http.Request) {
 
 func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	u, err := h.UserRepo.Authorize(r.FormValue("login"), r.FormValue("password"))
-	if err == user.ErrNoUser {
+	if err == models.ErrNoUser {
 		http.Error(w, `no user`, http.StatusBadRequest)
 		return
 	}
-	if err == user.ErrBadPass {
+	if err == models.ErrBadPass {
 		http.Error(w, `bad pass`, http.StatusBadRequest)
 		return
 	}
