@@ -4,8 +4,6 @@ import "crudapp/internal/pkg/models"
 
 // WARNING! completly unsafe in multi-goroutine use, need add mutexes
 
-//go:generate mockgen -destination=./mock_repo.go -package=items crudapp/pkg/items models.ItemsRepo
-
 type itemsRepo struct {
 	lastID uint32
 	data   []*models.Item

@@ -3,6 +3,7 @@ package delivery
 import (
 	"crudapp/internal/pkg/models"
 	"crudapp/internal/pkg/user"
+	"errors"
 	"html/template"
 	"net/http"
 
@@ -51,4 +52,12 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 func (h *UserHandler) Logout(w http.ResponseWriter, r *http.Request) {
 	h.Sessions.DestroyCurrent(w, r)
 	http.Redirect(w, r, "/", 302)
+}
+
+func (h *UserHandler) GetUserByID(login string) (*models.User, error) {
+	if login == "" {
+		return nil, errors.New("login is empty")
+	}
+
+	return h.UserRepo.GetByLogin(login)
 }
