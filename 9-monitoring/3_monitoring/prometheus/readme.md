@@ -19,11 +19,11 @@ docker run -d \
 	-e 'BOLT_PATH=/data/bot.db' \
 	-e 'STORE=bolt' \
 	-e 'TEMPLATE_PATHS=/templates/default.tmpl' \
-	-e 'TELEGRAM_ADMIN=6936842' \
+	-e 'TELEGRAM_ADMIN=164626023' \
 	-e 'TELEGRAM_TOKEN=686312965:AAFf0goR98-8uVxGM8tRVxhafHyyQ_KIynk' \
 	-v $(pwd)/alertmanager-bot:/data \
 	-v $(pwd)/alertmanager-bot:/templates \
-  --network monitoring \
+	--network monitoring \
 	--name alertmanager-bot \
 	metalmatze/alertmanager-bot:0.4.0 --listen.addr 0.0.0.0:8080
 ```
