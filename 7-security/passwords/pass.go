@@ -27,7 +27,7 @@ func PasswordMD5(plainPassword []byte) []byte {
 
 // bcrypt where PBKDF2 or scrypt support is not available.
 func PasswordBcrypt(plainPassword []byte) []byte {
-	passBcrypt, _ := bcrypt.GenerateFromPassword(plainPassword, 14)
+	passBcrypt, _ := bcrypt.GenerateFromPassword(plainPassword, 7)
 	return passBcrypt
 }
 
@@ -50,6 +50,7 @@ func PasswordArgon2(plainPassword []byte) []byte {
 func main() {
 	fmt.Printf("PasswordMD5: %x\n", PasswordMD5(plainPassword))
 	fmt.Printf("PasswordBcrypt: %x\n", PasswordBcrypt(plainPassword))
+	fmt.Printf("PasswordBcrypt2: %x\n", PasswordBcrypt(plainPassword))
 	fmt.Printf("PasswordPBKDF2: %x\n", PasswordPBKDF2(plainPassword))
 	fmt.Printf("PasswordScrypt: %x\n", PasswordScrypt(plainPassword))
 	fmt.Printf("PasswordArgon2: %x\n", PasswordArgon2(plainPassword))

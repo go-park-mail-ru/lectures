@@ -14,6 +14,7 @@ func multIn(a, b int, c int) int {
 
 // именованный результат
 func namedReturn() (out int) {
+	// out = 0
 	out = 2
 	return
 }
@@ -33,7 +34,6 @@ func multipleNamedReturn(ok bool) (rez int, err error) {
 		err = fmt.Errorf("some error happend")
 		// аналогично return rez, err
 		return 3, fmt.Errorf("some error happend")
-		return
 	}
 	rez = 2
 	return

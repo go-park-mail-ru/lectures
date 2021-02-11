@@ -1,4 +1,4 @@
-FROM golang:1.13.0
+FROM golang:1.14.0
 
 COPY ./code /go/src/docker0
 RUN go install docker0

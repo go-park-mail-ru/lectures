@@ -30,9 +30,7 @@ func checkSession(r *http.Request) (*Session, error) {
 		return nil, err
 	}
 
-	sess := sessManager.Check(&SessionID{
-		ID: cookieSessionID.Value,
-	})
+	http.Get("http://127.0.0.1:8081/graphql?query={auth(){sessionId}}")
 	return sess, nil
 }
 

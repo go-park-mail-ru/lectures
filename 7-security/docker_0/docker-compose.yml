@@ -2,7 +2,7 @@ version: '3'
 
 services:
   dockergo:
-    image: docker_0:latest
+    image: docker-golang-image:latest
 
   nginx:
     image: nginx:1.15.3

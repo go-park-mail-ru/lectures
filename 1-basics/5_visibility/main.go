@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	_ "github.com/go-park-mail-ru/lectures/1/5_visibility/person"
+	prsonModule "visibility/person"
 )
 
 func init() {
@@ -11,5 +11,6 @@ func init() {
 }
 
 func main() {
-	fmt.Println("I am main")
+	person := 1
+	fmt.Println("I am main", person, prsonModule.Person{})
 }

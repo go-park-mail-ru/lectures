@@ -1,0 +1,13 @@
+front -> api.myproj.com/csrf
+    -> referrer? -> jwt token
+
+front -> POST api.myproj.com/pay + token
+
+
+
+//--
+
+front -> GET api.myproj.com/api/user
+    -> Set-Cookie: csrf=kldjflckdhsfbilehroiw4hrkj34btf domain=.myproj.com expires=in 15 min
+    -> POST api.myproj.com/pay X-CSRF-Token: getCookie('csrf')
+        header == cookie

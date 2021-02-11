@@ -1,9 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"github.com/go-park-mail-ru/lectures/microservices/4_grpc/session"
+	"github.com/go-park-mail-ru/lectures/8-microservices/4_grpc/session"
 	"log"
+	"math/rand"
 	"net"
 	"time"
 
@@ -42,6 +44,10 @@ func authInterceptor(
 
 func rateLimiter(ctx context.Context, info *tap.Info) (context.Context, error) {
 	fmt.Printf("--\ncheck ratelim for %s\n", info.FullMethodName)
+	pass := rand.Int31n(2)
+	if pass == 0 {
+		return ctx, errors.New("you shall not pass")
+	}
 	return ctx, nil
 }
 

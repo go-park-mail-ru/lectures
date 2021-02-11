@@ -7,6 +7,10 @@ type Person struct {
 	Name string
 }
 
+func SumAges(p1, p2 Person) int {
+	return p1.Id + p2.Id
+}
+
 // не изменит оригинальной структуры, для который вызван
 func (p Person) UpdateName(name string) {
 	p.Name = name

@@ -4,10 +4,9 @@ import "fmt"
 
 func main() {
 	// инициализация при создании
-	var user map[string]string = map[string]string{
-		"name":     "Vasily",
-		"lastName": "Romanov",
-	}
+	user := map[string]string{}
+
+	user["test"] = "r"
 
 	// сразу с нужной ёмкостью
 	profile := make(map[string]string, 10)

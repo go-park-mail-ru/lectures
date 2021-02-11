@@ -11,13 +11,13 @@ func main() {
 
 	// пропуск типа
 	var num2 = 20
-	fmt.Printf("%d %d %d", num0, num1, num2)
+	fmt.Printf("%d %d %d \n", num0, num1, num2)
 
 	// короткое объявление переменной
 	num := 30
 	// только для новых переменных
 	// no new variables on left side of :=
-	// num := 31
+	num = 31
 
 	num += 1
 	fmt.Println("+=", num)
@@ -37,6 +37,8 @@ func main() {
 
 	// присваивание в существующие переменные
 	weight, height = 11, 21
+	weight, height = height, weight
+
 
 	// короткое присваивание
 	// хотя-бы одна переменная должна быть новой!

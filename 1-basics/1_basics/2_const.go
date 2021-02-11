@@ -2,14 +2,14 @@ package main
 
 import "fmt"
 
-const pi = 3.141
+const pi float32 = 3.141
 const (
 	hello = "Привет"
 	e     = 2.718
 )
 const (
-	zero = iota
-	_    // пустая переменная, пропуск iota
+	zero = iota + 1
+	_
 	two
 	three // = 3
 )

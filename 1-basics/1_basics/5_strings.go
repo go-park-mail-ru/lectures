@@ -13,7 +13,14 @@ func main() {
 	var hello string = "Привет\n\t"
 
 	// без спец символов
-	var world string = `Мир\n\t`
+	var world string = `Мир\n\t
+	jtjtjrejlreer
+	ertert
+	ert
+	er
+	tsdsdff
+	dfef
+	`
 
 	fmt.Println("str", str)
 	fmt.Println("hello", hello)

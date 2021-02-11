@@ -1,4 +1,9 @@
 ACL:
+Access Control List
+
+кто что и что делает?
+alice /menu write
+bob /menu read
 
 /admin/user/edit
     1
@@ -16,6 +21,15 @@ ACL:
 -------------------------------
 
 RBAC:
+Role Based Access Control
+
+client
+    /menu read
+    /order write
+owner
+    /menu read
+    /menu write
+    /orders read
 
 user_id; role
 1; user

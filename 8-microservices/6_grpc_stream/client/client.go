@@ -3,14 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"google.golang.org/grpc"
 	"io"
 	"log"
 	"sync"
 	"time"
 
-	"google.golang.org/grpc"
-
-	"github.com/go-park-mail-ru/lectures/microservices/6_grpc_stream/translit"
+	"github.com/go-park-mail-ru/lectures/8-microservices/6_grpc_stream/translit"
 )
 
 func main() {
@@ -40,7 +39,7 @@ func main() {
 			stream.Send(&translit.Word{
 				Word: w,
 			})
-			time.Sleep(2 * time.Second)
+			time.Sleep(1 * time.Second)
 		}
 		stream.CloseSend()
 		fmt.Println("\tsend done")

@@ -18,11 +18,15 @@ func main() {
 	// uint8, unit16, uint32, unit64
 	var unsignedBigInt uint64 = 1<<64 - 1
 
-	fmt.Println(i, autoInt, bigInt, unsignedInt, unsignedBigInt)
+	p := 9
+	o := int64(p)
+
+	fmt.Println(o, i, autoInt, bigInt, unsignedInt, unsignedBigInt)
 
 	// float32, float64
 	var pi float32 = 3.141
 	var e = 2.718
+	fmt.Printf("%T", e)
 	goldenRatio := 1.618
 
 	fmt.Println(pi, e, goldenRatio)

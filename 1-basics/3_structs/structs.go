@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 type Person struct {
-	Id      int
+	id      int
 	Name    string
 	Address string
 }
@@ -21,17 +21,19 @@ func main() {
 		Id:   1,
 		Name: "rvasily",
 		Person: Person{
+			id: 2,
 			Name:    "Василий",
 			Address: "Москва",
 		},
 	}
 	fmt.Printf("%#v\n", acc)
 
+
 	// короткое объявление структуры
-	// acc.Owner = Person{2, "Romanov Vasily", "Moscow"}
+	//acc.Person = Person{2, "Romanov Vasily", "Moscow"}
 
 	fmt.Printf("%#v\n", acc)
 
 	fmt.Println(acc.Name)
-	fmt.Println(acc.Person.Name)
+	//fmt.Println(acc.Person.Name)
 }

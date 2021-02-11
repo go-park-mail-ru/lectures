@@ -22,12 +22,17 @@ func checkPass(passHash []byte, plainPassword string) bool {
 func passExample() {
 	pass := "love"
 
+	// reg
+
 	salt := make([]byte, 8)
 	rand.Read(salt)
 	fmt.Printf("salt: %x\n", salt)
 
 	hashedPass := hashPass(salt, pass)
 	fmt.Printf("hashedPass: %x\n", hashedPass)
+
+
+	// login
 
 	passValid := checkPass(hashedPass, pass)
 	fmt.Printf("passValid: %v\n", passValid)

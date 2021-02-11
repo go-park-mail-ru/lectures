@@ -7,21 +7,21 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/go-park-mail-ru/lectures/microservices/4_grpc/session"
+	"github.com/go-park-mail-ru/lectures/8-microservices/4_grpc/session"
 )
 
 func main() {
 
-	grcpConn, err := grpc.Dial(
+	grpcConn, err := grpc.Dial(
 		"127.0.0.1:8081",
 		grpc.WithInsecure(),
 	)
 	if err != nil {
 		log.Fatalf("cant connect to grpc")
 	}
-	defer grcpConn.Close()
+	defer grpcConn.Close()
 
-	sessManager := session.NewAuthCheckerClient(grcpConn)
+	sessManager := session.NewAuthCheckerClient(grpcConn)
 
 	ctx := context.Background()
 

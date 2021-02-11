@@ -58,7 +58,7 @@ func main() {
 		fmt.Println("range map by val", val)
 	}
 
-	str := "Привет, Мир!"
+	str := "Привет, Мир! 💩"
 	for pos, char := range str {
 		fmt.Printf("%#U at pos %d\n", char, pos)
 	}

@@ -30,6 +30,7 @@ func main() {
 
 	// функиция возвращает замыкание
 	prefixer := func(prefix string) strFuncType {
+		// prefix
 		return func(in string) {
 			fmt.Printf("[%s] %s\n", prefix, in)
 		}

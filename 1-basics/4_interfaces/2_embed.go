@@ -41,7 +41,7 @@ type NFCPhone interface {
 
 // --------------
 
-func PayForMetwiWithPhone(phone NFCPhone) {
+func PayForMeWithPhone(phone NFCPhone) {
 	err := phone.Pay(1)
 	if err != nil {
 		fmt.Printf("Ошибка при оплате %v\n\n", err)
@@ -54,5 +54,5 @@ func PayForMetwiWithPhone(phone NFCPhone) {
 
 func main() {
 	myPhone := &Phone{Money: 9}
-	PayForMetwiWithPhone(myPhone)
+	PayForMeWithPhone(myPhone)
 }
