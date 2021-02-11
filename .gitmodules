@@ -1,0 +1,6 @@
+[submodule "5-architecture/8_clean_arch"]
+	path = 5-architecture/8_clean_arch
+	url = https://github.com/bxcodec/go-clean-arch
+[submodule "5-architecture/9_go_project_layout"]
+	path = 5-architecture/9_go_project_layout
+	url = https://github.com/golang-standards/project-layout

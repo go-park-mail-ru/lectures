@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  consul:
+    image: consul
+    ports:
+      - "8500:8500"
+  vault:
+    image: vault
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: 123
+    ports:
+      - "8200:8200"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./prometheus:/etc/prometheus"
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - "9093:9093"
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    volumes:
+      - "./alertmanager:/etc/alertmanager"
+  alertmanager-bot:
+    image: metalmatze/alertmanager-bot
+    command:
+      - "--listen.addr=0.0.0.0:8080"
+    environment:
+      ALERTMANAGER_URL: http://alertmanager:9093
+      BOLT_PATH: /data/bot.db
+      STORE: bolt
+      TEMPLATE_PATHS: /templates/default.tmpl
+      TELEGRAM_ADMIN: 164626023
+      TELEGRAM_TOKEN: 997404236:AAGB0453GmnqkD2vhFmz6I8Iq0YRlOut8HE
+    volumes:
+      - "./alertmanager-bot/templates:/templates"
+  jaeger:
+    image: jaegertracing/all-in-one
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
