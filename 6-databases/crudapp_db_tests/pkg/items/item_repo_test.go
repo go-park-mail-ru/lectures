@@ -11,6 +11,15 @@ import (
 
 // go test -coverprofile=cover.out && go tool cover -html=cover.out -o cover.html
 
+/*
+handlers
+	repo -> mock
+
+repo
+	db -> mock
+
+*/
+
 func TestGetByID(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -18,7 +27,7 @@ func TestGetByID(t *testing.T) {
 	}
 	defer db.Close()
 
-	repo := &ItemRepository{
+	repo := &RepoMysql{
 		DB: db,
 	}
 
@@ -35,7 +44,7 @@ func TestGetByID(t *testing.T) {
 	}
 
 	mock.
-		ExpectQuery("SELECT").
+		ExpectQuery("SELECT id, title, updated, description").
 		WithArgs(elemID).
 		WillReturnRows(rows)
 
@@ -97,7 +106,7 @@ func TestCreate(t *testing.T) {
 	}
 	defer db.Close()
 
-	repo := &ItemRepository{
+	repo := &RepoMysql{
 		DB: db,
 	}
 
@@ -133,6 +142,8 @@ func TestCreate(t *testing.T) {
 		ExpectExec(`INSERT INTO items`).
 		WithArgs(title, descr).
 		WillReturnError(fmt.Errorf("bad query"))
+
+	// mock.ExpectClose()
 
 	_, err = repo.Add(testItem)
 	if err == nil {

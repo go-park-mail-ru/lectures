@@ -1,0 +1,56 @@
+version: '3'
+
+# docker rm $(docker ps -a -q) && docker volume prune -f
+
+services:
+  postgres:
+    image: postgres:13.2
+    environment:
+      POSTGRES_PASSWORD: love
+      POSTGRES_DB: golang
+    ports:
+      - '5432:5432'
+    volumes:
+      - './_postgres/:/docker-entrypoint-initdb.d/'
+
+  mysql:
+    image: mysql:8.0.17
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "love"
+      MYSQL_DATABASE: golang
+    ports:
+      - '3306:3306'
+    volumes:
+      - './_mysql/:/docker-entrypoint-initdb.d/'
+
+  mongodb:
+    image: 'mongo'
+    environment:
+      - MONGO_INITDB_DATABASE=coursera
+    ports:
+      - '27017-27019:27017-27019'
+
+  adminer:
+    image: adminer
+    restart: always
+    links:
+        - "mysql:mysql"
+        - "postgres:postgres"
+    ports:
+      - 8090:8080
+
+  memcached:
+    image: 'memcached:latest'
+    ports:
+      - '11211:11211'
+  
+  redis:
+    image: 'redis'
+    ports:
+      - '6379:6379'
+
+  rabbitmq:
+    image: 'rabbitmq'
+    ports:
+      - '5672:5672'

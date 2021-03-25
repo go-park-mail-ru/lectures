@@ -57,6 +57,10 @@ func (h *ItemsHandler) AddForm(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// type ItemsAddInput struct {
+
+// }
+
 func (h *ItemsHandler) Add(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	item := new(items.Item)
@@ -69,13 +73,16 @@ func (h *ItemsHandler) Add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	sess, _ := session.SessionFromContext(r.Context())
+	// item.UserID = sess.UserID
+
 	lastID, err := h.ItemsRepo.Add(item)
 	if err != nil {
 		h.Logger.Error("Db err", err)
 		http.Error(w, `DB err`, http.StatusInternalServerError)
 		return
 	}
-	h.Logger.Infof("Insert with id LastInsertId: %v", lastID)
+	h.Logger.Infof("Insert with id LastInsertId: %v %v", lastID, sess)
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
