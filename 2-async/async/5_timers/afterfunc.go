@@ -2,27 +2,53 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
 
-func sayHello() {
-	fmt.Println("Hello World")
+const idle = 3
+
+type Resource struct {
+	mu  sync.Mutex
+	count int
+	timer *time.Timer
+}
+
+func (r *Resource) Update() int {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if r.timer != nil && !r.timer.Stop() {
+		r.timer.Reset(idle*time.Second)
+		return r.count
+	}
+	r.timer = time.AfterFunc(idle*time.Second, func() {
+		r.mu.Lock()
+		defer r.mu.Unlock()
+
+		r.count += 1
+		r.timer.Stop()
+	})
+	return r.count
 }
 
 func main() {
-	// timer := time.AfterFunc(1*time.Second, sayHello)
+	r := Resource{}
+	// Opens new connection
+	r.Update()
+	fmt.Printf("conn count -> %d\n", r.count)
 
-	// fmt.Scanln()
-	// timer.Stop()
+	// Takes old connection. Do not increment count
+	r.Update()
+	fmt.Printf("conn count -> %d\n", r.count)
 
+	// Takes old connection. Do not increment count
+	r.Update()
+	fmt.Printf("conn count -> %d\n", r.count)
 
-	timer := time.NewTimer(2*time.Second)
-	t := <-timer.C
+	// Uncomment this line to imitate idle timeout and use new connection
+	// time.Sleep((idle + 1) * time.Second)
 
-	fmt.Println("Timer", t)
-
-	t = <-time.After(1*time.Second)
-
-	fmt.Println("Time after", t)
-
+	r.Update()
+	fmt.Printf("conn count -> %d\n", r.count)
 }
