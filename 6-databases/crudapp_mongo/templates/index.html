@@ -23,12 +23,12 @@
     <tbody>
     {{range .Items}}
       <tr>
-        <td>{{.ID}}</td>
+        <td>{{.ID.Hex}}</td>
         <td>{{.Title}}</td>
-        <td>{{if .Updated.Valid}}{{.Updated.String}}{{end}}</td>
+        <td>{{.Updated}}</td>
         <td>
-          <a href="/items/{{.ID}}" class="btn btn-primary">Edit</a>
-          <span data-id="{{.ID}}" class="do-delete btn btn-danger">Del</span>
+          <a href="/items/{{.ID.Hex}}" class="btn btn-primary">Edit</a>
+          <span data-id="{{.ID.Hex}}" class="do-delete btn btn-danger">Del</span>
         </td>
       </tr>
 		{{end}}

@@ -4,16 +4,16 @@ import (
 	"database/sql"
 )
 
-type ItemRepository struct {
+type RepoMysql struct {
 	DB *sql.DB
 }
 
-func NewRepository(db *sql.DB) *ItemRepository {
-	return &ItemRepository{DB: db}
+func NewMysqlRepository(db *sql.DB) *RepoMysql {
+	return &RepoMysql{DB: db}
 }
 
-func (repo *ItemRepository) GetAll() ([]*Item, error) {
-	items := []*Item{}
+func (repo *RepoMysql) GetAll(limit int) ([]*Item, error) {
+	items := make([]*Item, 0, limit)
 	rows, err := repo.DB.Query("SELECT id, title, updated FROM items")
 	if err != nil {
 		return nil, err
@@ -30,19 +30,47 @@ func (repo *ItemRepository) GetAll() ([]*Item, error) {
 	return items, nil
 }
 
-func (repo *ItemRepository) GetByID(id int64) (*Item, error) {
+/*
+
+	dsn += "&interpolateParams=false" (или нет параметра)
+	QueryRow("SELECT * FROM items WHERE id = ?", id).
+	->
+	smtp := db.PrepareStatement("SELECT * FROM items WHERE id = ?")
+	row := smtp.Execute(smtp, 1)
+
+
+
+	dsn += "&interpolateParams=true"
+	smtp := db.QueryRaw("SELECT * FROM items WHERE id = 1")
+
+
+
+	params := make([]string, 0, len(manyIds))
+	values := make([]interface{}, 0, len(manyIds))
+	for _, val := manyIds {
+		params = append(params, "?")
+		values = append(values, val)
+	}
+
+	q := fmt.Sprintf(`where id in(%s)`, string.Join(params, `,`))
+	db.Query(q, values...)
+
+*/
+
+func (repo *RepoMysql) GetByID(id int64) (*Item, error) {
 	post := &Item{}
 	// QueryRow сам закрывает коннект
 	err := repo.DB.
-		QueryRow("SELECT id, title, updated, description FROM items WHERE id = ?", id).
+		QueryRow(`SELECT id, title, updated, description FROM items WHERE id = ?`, id).
 		Scan(&post.ID, &post.Title, &post.Updated, &post.Description)
+	// если запись не найден - вернется sql.ErrNoRows
 	if err != nil {
 		return nil, err
 	}
 	return post, nil
 }
 
-func (repo *ItemRepository) Add(elem *Item) (int64, error) {
+func (repo *RepoMysql) Add(elem *Item) (int64, error) {
 	result, err := repo.DB.Exec(
 		"INSERT INTO items (`title`, `description`) VALUES (?, ?)",
 		elem.Title,
@@ -54,7 +82,7 @@ func (repo *ItemRepository) Add(elem *Item) (int64, error) {
 	return result.LastInsertId()
 }
 
-func (repo *ItemRepository) Update(elem *Item) (int64, error) {
+func (repo *RepoMysql) Update(elem *Item) (int64, error) {
 	result, err := repo.DB.Exec(
 		"UPDATE items SET"+
 			"`title` = ?"+
@@ -72,7 +100,7 @@ func (repo *ItemRepository) Update(elem *Item) (int64, error) {
 	return result.RowsAffected()
 }
 
-func (repo *ItemRepository) Delete(id int64) (int64, error) {
+func (repo *RepoMysql) Delete(id int64) (int64, error) {
 	result, err := repo.DB.Exec(
 		"DELETE FROM items WHERE id = ?",
 		id,

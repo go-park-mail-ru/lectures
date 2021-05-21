@@ -2,9 +2,15 @@ package main
 
 import (
 	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"html/template"
+	"log"
 	"net/http"
+
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/jackc/pgx/stdlib"
+	"github.com/jmoiron/sqlx"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 
 	"crudapp/pkg/handlers"
 	"crudapp/pkg/items"
@@ -16,25 +22,48 @@ import (
 	"go.uber.org/zap"
 )
 
-func main() {
-
-	// основные настройки к базе
-	dsn := "root:love@tcp(localhost:3306)/golang?"
-	// указываем кодировку
-	dsn += "&charset=utf8"
-	// отказываемся от prapared statements
-	// параметры подставляются сразу
-	dsn += "&interpolateParams=true"
-
+func getMysql() *sql.DB {
+	dsn := "root:love@tcp(localhost:3306)/golang?&charset=utf8&interpolateParams=true"
 	db, err := sql.Open("mysql", dsn)
-
-	db.SetMaxOpenConns(10)
-	db.Set
-
 	err = db.Ping() // вот тут будет первое подключение к базе
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
+	db.SetMaxOpenConns(10)
+	return db
+}
+
+func getPostgres() *sql.DB {
+	dsn := "user=postgres dbname=golang password=love host=127.0.0.1 port=5432 sslmode=disable"
+	db, err := sql.Open("pgx", dsn)
+	if err != nil {
+		log.Fatalln("cant parse config", err)
+	}
+	err = db.Ping() // вот тут будет первое подключение к базе
+	if err != nil {
+		log.Fatalln(err)
+	}
+	db.SetMaxOpenConns(10)
+	return db
+}
+
+// http://jmoiron.github.io/sqlx/
+func getSqlx() *sqlx.DB {
+	return sqlx.NewDb(getMysql(), "mysql")
+}
+
+// https://gorm.io/
+func getGorm() *gorm.DB {
+	db, err := gorm.Open(mysql.New(mysql.Config{
+		Conn: getMysql(),
+	}), &gorm.Config{})
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return db
+}
+
+func main() {
 
 	// -----
 
@@ -45,8 +74,13 @@ func main() {
 	defer zapLogger.Sync() // flushes buffer, if any
 	logger := zapLogger.Sugar()
 
+	// dbMSSQL := sql.Open(...)
+
 	userRepo := user.NewUserRepo()
-	itemsRepo := items.NewRepository(db)
+	// itemsRepo := items.NewMysqlRepository(getMysql())
+	// itemsRepo := items.NewSqlxRepository(getSqlx())
+	itemsRepo := items.NewGormRepository(getGorm())
+	// itemsRepo := items.NewPgxRepository(getPostgres())
 
 	userHandler := &handlers.UserHandler{
 		Tmpl:     templates,

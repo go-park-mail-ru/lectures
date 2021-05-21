@@ -14,6 +14,17 @@ import (
 	"go.uber.org/zap"
 )
 
+/*
+
+repo
+	db -> mock
+
+handler
+	repo -> mock
+
+
+*/
+
 func TestItemsHandlerList(t *testing.T) {
 
 	// мы передаём t сюда, это надо чтобы получить корректное сообщение если тесты не пройдут

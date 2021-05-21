@@ -1,10 +1,11 @@
 package main
 
 import (
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
+	"context"
 	"html/template"
+	"log"
 	"net/http"
+	"time"
 
 	"crudapp/pkg/handlers"
 	"crudapp/pkg/items"
@@ -13,28 +14,27 @@ import (
 	"crudapp/pkg/user"
 
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"go.uber.org/zap"
 )
 
-func main() {
-
-	// основные настройки к базе
-	dsn := "root:love@tcp(localhost:3306)/golang?"
-	// указываем кодировку
-	dsn += "&charset=utf8"
-	// отказываемся от prapared statements
-	// параметры подставляются сразу
-	dsn += "&interpolateParams=true"
-
-	db, err := sql.Open("mysql", dsn)
-
-	db.SetMaxOpenConns(10)
-	db.Set
-
-	err = db.Ping() // вот тут будет первое подключение к базе
+func getMongo(cfg string) *mongo.Client {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(cfg))
 	if err != nil {
-		panic(err)
+		log.Fatalln("cant connect to mongo", err)
 	}
+	err = client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		log.Fatalln("cant ping mongo", err)
+	}
+	return client
+}
+
+func main() {
 
 	// -----
 
@@ -45,8 +45,12 @@ func main() {
 	defer zapLogger.Sync() // flushes buffer, if any
 	logger := zapLogger.Sugar()
 
+	// dbMSSQL := sql.Open(...)
+
 	userRepo := user.NewUserRepo()
-	itemsRepo := items.NewRepository(db)
+
+	mongoClient := getMongo("mongodb://localhost:27017")
+	itemsRepo := items.NewMongoRepository(mongoClient.Database("coursera").Collection("items"))
 
 	userHandler := &handlers.UserHandler{
 		Tmpl:     templates,

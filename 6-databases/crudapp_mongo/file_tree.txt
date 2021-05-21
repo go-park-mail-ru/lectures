@@ -1,0 +1,42 @@
+.
+├── bin
+├── cmd
+│   └── crudapp
+│       └── main.go
+├── cover.html
+├── cover.out
+├── file_tree.txt
+├── go.mod
+├── go.sum
+├── pkg
+│   ├── handlers
+│   │   ├── cover.out
+│   │   ├── handler.html
+│   │   ├── items.go
+│   │   ├── items_mock.go
+│   │   ├── items_test.go
+│   │   └── user.go
+│   ├── items
+│   │   ├── item.go
+│   │   ├── item_repo_test.go
+│   │   ├── repo_gorm.go
+│   │   ├── repo_mysql.go
+│   │   ├── repo_pgx.go
+│   │   └── repo_sqlx.go
+│   ├── middleware
+│   │   ├── accesslog.go
+│   │   ├── auth.go
+│   │   └── panic.go
+│   ├── session
+│   │   ├── manager.go
+│   │   └── session.go
+│   └── user
+│       └── user.go
+├── readme.md
+└── templates
+    ├── create.html
+    ├── edit.html
+    ├── index.html
+    └── login.html
+
+10 directories, 29 files
