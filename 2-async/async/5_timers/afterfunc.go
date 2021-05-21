@@ -10,10 +10,11 @@ func sayHello() {
 }
 
 func main() {
-	// timer := time.AfterFunc(1*time.Second, sayHello)
-
-	// fmt.Scanln()
-	// timer.Stop()
+	//timer := time.AfterFunc(1*time.Second, sayHello)
+	//
+	//fmt.Scanln()
+	//timer.Stop()
+	
 
 
 	timer := time.NewTimer(2*time.Second)

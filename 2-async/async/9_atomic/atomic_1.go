@@ -15,7 +15,7 @@ func main() {
 	for i := 0; i < 1000; i++ {
 		go inc()
 	}
-	time.Sleep(20 * time.Millisecond)
+	time.Sleep(1000 * time.Millisecond)
 	// ождается 1000, но по факту будет меньше
 	fmt.Println("total operation = ", totalOperations)
 }

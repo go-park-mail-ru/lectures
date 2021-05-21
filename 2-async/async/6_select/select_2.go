@@ -10,6 +10,7 @@ func main() {
 	ch1 <- 2
 	ch2 := make(chan int, 2)
 	ch2 <- 3
+	ch2 <- 6
 LOOP:
 	for {
 		select {

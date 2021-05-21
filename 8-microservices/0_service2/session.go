@@ -23,7 +23,7 @@ type SessionManager struct {
 
 func NewSessionManager() *SessionManager {
 	return &SessionManager{
-		mu: sync.RWMutex{}
+		mu: sync.RWMutex{},
 		sessions: map[SessionID]*Session{},
 	}
 }
