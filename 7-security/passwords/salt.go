@@ -14,7 +14,8 @@ func hashPass(salt []byte, plainPassword string) []byte {
 }
 
 func checkPass(passHash []byte, plainPassword string) bool {
-	salt := passHash[0:8]
+	salt := make([]byte, 8)
+	copy(salt, passHash[0:8])
 	userPassHash := hashPass(salt, plainPassword)
 	return bytes.Equal(userPassHash, passHash)
 }
