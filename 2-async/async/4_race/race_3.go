@@ -6,18 +6,13 @@ import (
 )
 
 func main() {
-	var counters = map[int]int{}
-	mu := &sync.Mutex{}
+	var counters = &sync.Map{}
 	for i := 0; i < 5; i++ {
-		go func(counters map[int]int, th int, mu *sync.Mutex) {
+		go func(counters *sync.Map, th int) {
 			for j := 0; j < 5; j++ {
-				mu.Lock()
-				{
-					counters[th*10+j]++
-				}
-				mu.Unlock()
+				counters.Store(th*10+j, 5)
 			}
-		}(counters, i, mu)
+		}(counters, i)
 	}
 
 	fmt.Scanln()

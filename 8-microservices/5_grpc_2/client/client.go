@@ -36,17 +36,17 @@ func timingInterceptor(
 
 // -----
 
-type tokenAuth struct {
-	Token string
+type serviceAuth struct {
+	ServiceName string
 }
 
-func (t *tokenAuth) GetRequestMetadata(context.Context, ...string) (map[string]string, error) {
+func (t *serviceAuth) GetRequestMetadata(context.Context, ...string) (map[string]string, error) {
 	return map[string]string{
-		"access-token": t.Token,
+		"access-token": t.ServiceName,
 	}, nil
 }
 
-func (c *tokenAuth) RequireTransportSecurity() bool {
+func (c *serviceAuth) RequireTransportSecurity() bool {
 	return false
 }
 
@@ -57,7 +57,7 @@ func main() {
 	grcpConn, err := grpc.Dial(
 		"127.0.0.1:8081",
 		grpc.WithUnaryInterceptor(timingInterceptor),
-		grpc.WithPerRPCCredentials(&tokenAuth{"100500"}),
+		grpc.WithPerRPCCredentials(&serviceAuth{"orders"}),
 		grpc.WithInsecure(),
 	)
 	if err != nil {

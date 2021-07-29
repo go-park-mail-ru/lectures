@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"strconv"
+	"time"
 
 	"github.com/go-park-mail-ru/lectures/8-microservices/4_grpc/session"
 
@@ -48,14 +49,29 @@ func main() {
 	err = consul.Agent().ServiceRegister(&consulapi.AgentServiceRegistration{
 		ID:      serviceID,
 		Name:    "session-api",
-		Port:    *grpcPort,
-		Address: "127.0.0.1",
+		Address: "127.0.0.1:" + port,
+		Check: &consulapi.AgentServiceCheck{
+			CheckID: serviceID,
+			Status: consulapi.HealthPassing,
+			TTL:    "1m",
+		},
 	})
 	if err != nil {
 		fmt.Println("cant add service to consul", err)
 		return
 	}
 	fmt.Println("registered in consul", serviceID)
+
+	go func() {
+		for {
+			fmt.Println("check ttl")
+			err := consul.Agent().PassTTL(serviceID, "check")
+			if err != nil {
+				fmt.Println("fail ttl passing", err)
+			}
+			<-time.After(30 * time.Second)
+		}
+	}()
 
 	defer func() {
 		err := consul.Agent().ServiceDeregister(serviceID)

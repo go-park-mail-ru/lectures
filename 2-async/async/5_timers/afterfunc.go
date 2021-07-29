@@ -6,14 +6,6 @@ import (
 	"time"
 )
 
-const idle = 3
-
-type Resource struct {
-	mu  sync.Mutex
-	count int
-	timer *time.Timer
-}
-
 func (r *Resource) Update() int {
 	r.mu.Lock()
 	defer r.mu.Unlock()

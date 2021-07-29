@@ -3,13 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/go-park-mail-ru/lectures/8-microservices/6_grpc_stream/translit"
 	"google.golang.org/grpc"
 	"io"
 	"log"
 	"sync"
-	"time"
-
-	"github.com/go-park-mail-ru/lectures/8-microservices/6_grpc_stream/translit"
 )
 
 func main() {
@@ -33,13 +31,13 @@ func main() {
 
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
-		words := []string{"privet", "kak", "dela"}
+		words := []string{"privet", "kak", "dela", "go", "vyhodit'", "s", "udalyonki"}
 		for _, w := range words {
 			fmt.Println("-> ", w)
 			stream.Send(&translit.Word{
 				Word: w,
 			})
-			time.Sleep(1 * time.Second)
+			//time.Sleep(1 * time.Second)
 		}
 		stream.CloseSend()
 		fmt.Println("\tsend done")

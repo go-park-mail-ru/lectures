@@ -17,10 +17,12 @@ func студент(ctx context.Context, workerNum int, out chan<- int) {
 		fmt.Println("студент", workerNum, "придумал")
 		out <- workerNum
 	}
+
 }
 
 func main() {
 	ctx, finish := context.WithCancel(context.Background())
+
 	result := make(chan int, 1)
 
 	for i := 0; i <= 10; i++ {

@@ -14,10 +14,13 @@ const (
 
 func startWorker(in int, waiter *sync.WaitGroup) {
 	defer waiter.Done() // wait_2.go уменьшаем счетчик на 1
+	localWg := &sync.WaitGroup{}
 	for j := 0; j < iterationsNum; j++ {
 		fmt.Printf(formatWork(in, j))
 		time.Sleep(time.Millisecond) // попробуйте убрать этот sleep
 	}
+
+	localWg.Wait()
 }
 
 func main() {
@@ -28,8 +31,7 @@ func main() {
 		wg.Add(1) // wait_2.go добавляем
 		go startWorker(i, wg)
 	}
-	time.Sleep(time.Millisecond)
-	wg.Wait() // wait_2.go ожидаем, пока waiter.Done() не приведёт счетчик к 0
+	wg.Wait() // 0 wait_2.go ожидаем, пока waiter.Done() не приведёт счетчик к 0
 
 	fmt.Println(11111)
 

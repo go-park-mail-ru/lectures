@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func worker(ctx context.Context, workerNum int, out chan<- int) {
+func студент(ctx context.Context, workerNum int, out chan<- int) {
 	waitTime := time.Duration(rand.Intn(100)+10) * time.Millisecond
 	fmt.Println(workerNum, "студент ", waitTime)
 	select {
@@ -21,11 +21,11 @@ func worker(ctx context.Context, workerNum int, out chan<- int) {
 
 func main() {
 	workTime := 50 * time.Millisecond
-	ctx, _ := context.WithTimeout(context.Background(), workTime)
+	ctx, _ := context.WithTimeout(context.Background(), workTime) //
 	result := make(chan int, 1)
 
 	for i := 0; i <= 10; i++ {
-		go worker(ctx, i, result)
+		go студент(ctx, i, result)
 	}
 
 	totalFound := 0
