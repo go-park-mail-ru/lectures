@@ -2,55 +2,26 @@ package main
 
 import (
 	"fmt"
-	"sync"
 	"time"
 )
 
-const idle = 1
-
-type Connection struct {
-	sync.Mutex
-
-	timer *time.Timer
-	count uint
-}
-
-func (c *Connection) Update() uint {
-	c.Lock()
-	defer c.Unlock()
-
-	if c.timer != nil && !c.timer.Stop() {
-		c.timer.Reset(idle * time.Second)
-		return c.count
-	}
-
-	// if connection don't use more than idle timeout than release
-	c.timer = time.AfterFunc(idle*time.Second, func() {
-		c.Lock()
-		defer c.Unlock()
-
-		c.count += 1
-
-		c.timer.Stop()
-	})
-	return c.count
+func sayHello() {
+	fmt.Println("Hello World")
 }
 
 func main() {
-	c := Connection{}
-	update := func() {
-		c.Update()
-		fmt.Printf("conn count -> %d\n", c.count)
-	}
+	//timer := time.AfterFunc(1*time.Second, sayHello)
+	//
+	//fmt.Scanln()
+	//timer.Stop()
 
-	// Opens new connection
-	update()
+	timer := time.NewTimer(2 * time.Second)
+	t := <-timer.C
 
-	// Takes old connection. Do not increment count
-	update()
+	fmt.Println("Timer", t)
 
-	// Uncomment this line to imitate idle timeout and use new connection
-	// time.Sleep((idle + 1) * time.Second)
+	t = <-time.After(1 * time.Second)
 
-	update()
+	fmt.Println("Time after", t)
+
 }
