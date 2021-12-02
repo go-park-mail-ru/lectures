@@ -1,4 +1,4 @@
-// go build gen/* && ./codegen.exe pack/packer.go  pack/marshaller.go
+// go build -o ./codegen.exe gen/*  && ./codegen.exe pack/unpack.go  pack/marshaller.go
 package main
 
 import "fmt"

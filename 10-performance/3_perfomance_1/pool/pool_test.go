@@ -1,4 +1,4 @@
-package main
+package pool
 
 import (
 	"bytes"
@@ -64,5 +64,5 @@ func BenchmarkAllocPool(b *testing.B) {
 }
 
 /*
-	go test -bench . -benchmem pool_test.go
+	go test -bench . -benchmem pool/pool_test.go
 */

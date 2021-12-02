@@ -1,4 +1,4 @@
-package main
+package json
 
 //easyjson:json
 type User struct {
