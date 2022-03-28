@@ -1,0 +1,35 @@
+
+
+
+cmd
+    webapp
+        webapp.go
+    img_reseize_queue
+        queue.go <- стартуем горутины из queue_ampq.go
+pkg
+    videos
+        video.go
+        delivery
+            http.go
+                video_id = fileservice.UploadVideo -> будет обращаться в файловй сервис
+                usecase.AddResizeTask(video_id)
+            queue_ampq.go
+                usecase.ProcessResizeTask
+        usecase
+            video.go
+                AddResizeTask
+                    repo.CreateUserRec
+                    repo.CreateQueueTask
+                ProcessResizeTask
+                    ???.ResizeVideo
+                    repo.UpdateUserRec
+        repo
+            video.go
+                CreateUserRec
+                UpdateUserRec
+            queue.go
+                AddToQueue
+                GerFromQueue
+
+
+
