@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	gql "github.com/go-park-mail-ru/lectures/4/3_graphql/gqlgen"
+	gql "github.com/go-park-mail-ru/lectures/4-api/3_graphql/gqlgen"
 
 	"github.com/99designs/gqlgen/handler"
 )
