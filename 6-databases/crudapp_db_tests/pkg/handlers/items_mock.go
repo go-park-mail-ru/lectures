@@ -8,7 +8,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 
-	"crudapp/pkg/items"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/items"
 )
 
 // MockItemRepository is a mock of ItemRepository interface

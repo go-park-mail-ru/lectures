@@ -1,8 +1,9 @@
 package user
 
 import (
-	"echo_example/model"
 	"errors"
+
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/model"
 )
 
 var ErrUserExists = errors.New("user exists")

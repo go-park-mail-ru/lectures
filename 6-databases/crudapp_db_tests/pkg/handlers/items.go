@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"crudapp/pkg/items"
-	"crudapp/pkg/session"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/items"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/session"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"

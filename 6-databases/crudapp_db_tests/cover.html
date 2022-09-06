@@ -3,6 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>handlers: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -54,29 +55,21 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">crudapp/cmd/crudapp/main.go (0.0%)</option>
+				<option value="file0">crudapp/pkg/handlers/items.go (11.5%)</option>
 				
-				<option value="file1">crudapp/pkg/handlers/items.go (11.6%)</option>
+				<option value="file1">crudapp/pkg/handlers/items_mock.go (28.2%)</option>
 				
-				<option value="file2">crudapp/pkg/handlers/items_mock.go (28.2%)</option>
+				<option value="file2">crudapp/pkg/handlers/user.go (0.0%)</option>
 				
-				<option value="file3">crudapp/pkg/handlers/user.go (0.0%)</option>
+				<option value="file3">crudapp/pkg/items/item.go (0.0%)</option>
 				
-				<option value="file4">crudapp/pkg/items/item.go (0.0%)</option>
+				<option value="file4">crudapp/pkg/items/repo_gorm.go (0.0%)</option>
 				
-				<option value="file5">crudapp/pkg/items/repo.go (30.0%)</option>
+				<option value="file5">crudapp/pkg/items/repo_mysql.go (30.0%)</option>
 				
-				<option value="file6">crudapp/pkg/middleware/accesslog.go (0.0%)</option>
+				<option value="file6">crudapp/pkg/items/repo_pgx.go (0.0%)</option>
 				
-				<option value="file7">crudapp/pkg/middleware/auth.go (0.0%)</option>
-				
-				<option value="file8">crudapp/pkg/middleware/panic.go (0.0%)</option>
-				
-				<option value="file9">crudapp/pkg/session/manager.go (0.0%)</option>
-				
-				<option value="file10">crudapp/pkg/session/session.go (0.0%)</option>
-				
-				<option value="file11">crudapp/pkg/user/user.go (0.0%)</option>
+				<option value="file7">crudapp/pkg/items/repo_sqlx.go (0.0%)</option>
 				
 				</select>
 			</div>
@@ -90,94 +83,7 @@
 		</div>
 		<div id="content">
 		
-		<pre class="file" id="file0" style="display: none">package main
-
-import (
-        "database/sql"
-        _ "github.com/go-sql-driver/mysql"
-        "html/template"
-        "net/http"
-
-        "crudapp/pkg/handlers"
-        "crudapp/pkg/items"
-        "crudapp/pkg/middleware"
-        "crudapp/pkg/session"
-        "crudapp/pkg/user"
-
-        "github.com/gorilla/mux"
-        "go.uber.org/zap"
-)
-
-func main() <span class="cov0" title="0">{
-
-        // основные настройки к базе
-        dsn := "root:love@tcp(localhost:3306)/golang?"
-        // указываем кодировку
-        dsn += "&amp;charset=utf8"
-        // отказываемся от prapared statements
-        // параметры подставляются сразу
-        dsn += "&amp;interpolateParams=true"
-
-        db, err := sql.Open("mysql", dsn)
-
-        db.SetMaxOpenConns(10)
-
-        err = db.Ping() // вот тут будет первое подключение к базе
-        if err != nil </span><span class="cov0" title="0">{
-                panic(err)</span>
-        }
-
-        // -----
-
-        <span class="cov0" title="0">templates := template.Must(template.ParseGlob("./templates/*"))
-
-        sm := session.NewSessionsMem()
-        zapLogger, _ := zap.NewProduction()
-        defer zapLogger.Sync() // flushes buffer, if any
-        logger := zapLogger.Sugar()
-
-        userRepo := user.NewUserRepo()
-        itemsRepo := items.NewRepository(db)
-
-        userHandler := &amp;handlers.UserHandler{
-                Tmpl:     templates,
-                UserRepo: userRepo,
-                Logger:   logger,
-                Sessions: sm,
-        }
-
-        handlers := &amp;handlers.ItemsHandler{
-                Tmpl:      templates,
-                Logger:    logger,
-                ItemsRepo: itemsRepo,
-        }
-
-        r := mux.NewRouter()
-        r.HandleFunc("/", userHandler.Index).Methods("GET")
-        r.HandleFunc("/login", userHandler.Login).Methods("POST")
-        r.HandleFunc("/logout", userHandler.Logout).Methods("POST")
-
-        r.HandleFunc("/items", handlers.List).Methods("GET")
-        r.HandleFunc("/items/new", handlers.AddForm).Methods("GET")
-        r.HandleFunc("/items/new", handlers.Add).Methods("POST")
-        r.HandleFunc("/items/{id}", handlers.Edit).Methods("GET")
-        r.HandleFunc("/items/{id}", handlers.Update).Methods("POST")
-        r.HandleFunc("/items/{id}", handlers.Delete).Methods("DELETE")
-
-        mux := middleware.Auth(sm, r)
-        mux = middleware.AccessLog(logger, mux)
-        mux = middleware.Panic(mux)
-
-        addr := ":8080"
-        logger.Infow("starting server",
-                "type", "START",
-                "addr", addr,
-        )
-        http.ListenAndServe(addr, mux)</span>
-}
-</pre>
-		
-		<pre class="file" id="file1" style="display: none">package handlers
+		<pre class="file" id="file0" style="display: none">package handlers
 
 import (
         "encoding/json"
@@ -185,8 +91,8 @@ import (
         "net/http"
         "strconv"
 
-        "crudapp/pkg/items"
-        "crudapp/pkg/session"
+        "github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/items"
+        "github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/session"
 
         "github.com/gorilla/mux"
         "github.com/gorilla/schema"
@@ -236,6 +142,10 @@ func (h *ItemsHandler) AddForm(w http.ResponseWriter, r *http.Request) <span cla
         }</span>
 }
 
+// type ItemsAddInput struct {
+
+// }
+
 func (h *ItemsHandler) Add(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
         r.ParseForm()
         item := new(items.Item)
@@ -248,13 +158,16 @@ func (h *ItemsHandler) Add(w http.ResponseWriter, r *http.Request) <span class="
                 return
         }</span>
 
-        <span class="cov0" title="0">lastID, err := h.ItemsRepo.Add(item)
+        <span class="cov0" title="0">sess, _ := session.SessionFromContext(r.Context())
+        // item.UserID = sess.UserID
+
+        lastID, err := h.ItemsRepo.Add(item)
         if err != nil </span><span class="cov0" title="0">{
                 h.Logger.Error("Db err", err)
                 http.Error(w, `DB err`, http.StatusInternalServerError)
                 return
         }</span>
-        <span class="cov0" title="0">h.Logger.Infof("Insert with id LastInsertId: %v", lastID)
+        <span class="cov0" title="0">h.Logger.Infof("Insert with id LastInsertId: %v %v", lastID, sess)
         http.Redirect(w, r, "/", http.StatusFound)</span>
 }
 
@@ -343,7 +256,7 @@ func (h *ItemsHandler) Delete(w http.ResponseWriter, r *http.Request) <span clas
 }
 </pre>
 		
-		<pre class="file" id="file2" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+		<pre class="file" id="file1" style="display: none">// Code generated by MockGen. DO NOT EDIT.
 // Source: items.go
 
 // Package handlers is a generated GoMock package.
@@ -353,7 +266,7 @@ import (
         gomock "github.com/golang/mock/gomock"
         reflect "reflect"
 
-        "crudapp/pkg/items"
+        "github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/items"
 )
 
 // MockItemRepository is a mock of ItemRepository interface
@@ -455,14 +368,14 @@ func (mr *MockItemRepositoryMockRecorder) Delete(arg0 interface{}) *gomock.Call 
 }</span>
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package handlers
+		<pre class="file" id="file2" style="display: none">package handlers
 
 import (
         "html/template"
         "net/http"
 
-        "crudapp/pkg/session"
-        "crudapp/pkg/user"
+        "github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/session"
+        "github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/user"
 
         "go.uber.org/zap"
 )
@@ -510,24 +423,120 @@ func (h *UserHandler) Logout(w http.ResponseWriter, r *http.Request) <span class
 }</span>
 </pre>
 		
-		<pre class="file" id="file4" style="display: none">package items
+		<pre class="file" id="file3" style="display: none">package items
 
 import (
         "database/sql"
+        "fmt"
         "strconv"
+
+        "gorm.io/gorm"
 )
 
-type Item struct {
+type ItemZero struct {
         ID          uint32
         Title       string
         Description string
         Updated     sql.NullString
 }
 
+type Item struct {
+        ID          uint32 `sql:"AUTO_INCREMENT" gorm:"primary_key"`
+        Title       string
+        Description string
+        Updated     sql.NullString `sql:"null"`
+}
+
 // позволяет items handlers не импортировать sql
 func (it *Item) SetUpdated(val uint32) <span class="cov0" title="0">{
         it.Updated = sql.NullString{String: strconv.Itoa(int(val))}
 }</span>
+
+/*
+https://gorm.io/docs/models.html
+*/
+
+func (i *Item) TableName() string <span class="cov0" title="0">{
+        return "items"
+}</span>
+
+func (i *Item) BeforeSave(*gorm.DB) (err error) <span class="cov0" title="0">{
+        fmt.Println("trigger on before save")
+        return
+}</span>
+
+type Item0 struct {
+        gorm.Model
+        ID          uint32 `sql:"AUTO_INCREMENT" gorm:"primary_key"`
+        Title       string
+        Description string
+        Updated     string `sql:"null"`
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package items
+
+import (
+        "log"
+
+        "gorm.io/gorm"
+)
+
+type RepoGorm struct {
+        DB *gorm.DB
+}
+
+func NewGormRepository(db *gorm.DB) *RepoGorm <span class="cov0" title="0">{
+        return &amp;RepoGorm{DB: db}
+}</span>
+
+func (repo *RepoGorm) GetAll() ([]*Item, error) <span class="cov0" title="0">{
+        // https://gorm.io/docs/query.html
+        items := make([]*Item, 0, 10)
+        err := repo.DB.Find(&amp;items).Error
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return items, nil</span>
+}
+
+func (repo *RepoGorm) GetByID(id int64) (*Item, error) <span class="cov0" title="0">{
+        post := &amp;Item{}
+        err := repo.DB.First(&amp;post, "id = ?", id).Error
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return post, nil</span>
+}
+
+func (repo *RepoGorm) Add(elem *Item) (int64, error) <span class="cov0" title="0">{
+        err := repo.DB.Create(elem).Error
+        log.Println("created elem id:", elem.ID)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return int64(elem.ID), nil</span>
+}
+
+func (repo *RepoGorm) Update(elem *Item) (int64, error) <span class="cov0" title="0">{
+        res := repo.DB.Model(&amp;elem).Updates(map[string]interface{}{
+                "title":       elem.Title,
+                "description": elem.Description,
+                "updated":     "rvasily",
+        })
+        if res.Error != nil </span><span class="cov0" title="0">{
+                return 0, res.Error
+        }</span>
+        <span class="cov0" title="0">return res.RowsAffected, nil</span>
+}
+
+func (repo *RepoGorm) Delete(id int64) (int64, error) <span class="cov0" title="0">{
+        res := repo.DB.Delete(&amp;Item{}, id)
+        if res.Error != nil </span><span class="cov0" title="0">{
+                return 0, res.Error
+        }</span>
+        <span class="cov0" title="0">return res.RowsAffected, nil</span>
+}
 </pre>
 		
 		<pre class="file" id="file5" style="display: none">package items
@@ -536,16 +545,16 @@ import (
         "database/sql"
 )
 
-type ItemRepository struct {
+type RepoMysql struct {
         DB *sql.DB
 }
 
-func NewRepository(db *sql.DB) *ItemRepository <span class="cov0" title="0">{
-        return &amp;ItemRepository{DB: db}
+func NewMysqlRepository(db *sql.DB) *RepoMysql <span class="cov0" title="0">{
+        return &amp;RepoMysql{DB: db}
 }</span>
 
-func (repo *ItemRepository) GetAll() ([]*Item, error) <span class="cov0" title="0">{
-        items := []*Item{}
+func (repo *RepoMysql) GetAll(limit int) ([]*Item, error) <span class="cov0" title="0">{
+        items := make([]*Item, 0, limit)
         rows, err := repo.DB.Query("SELECT id, title, updated FROM items")
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
@@ -562,19 +571,47 @@ func (repo *ItemRepository) GetAll() ([]*Item, error) <span class="cov0" title="
         <span class="cov0" title="0">return items, nil</span>
 }
 
-func (repo *ItemRepository) GetByID(id int64) (*Item, error) <span class="cov8" title="1">{
+/*
+
+        dsn += "&amp;interpolateParams=false" (или нет параметра)
+        QueryRow("SELECT * FROM items WHERE id = ?", id).
+        -&gt;
+        smtp := db.PrepareStatement("SELECT * FROM items WHERE id = ?")
+        row := smtp.Execute(smtp, 1)
+
+
+
+        dsn += "&amp;interpolateParams=true"
+        smtp := db.QueryRaw("SELECT * FROM items WHERE id = 1")
+
+
+
+        params := make([]string, 0, len(manyIds))
+        values := make([]interface{}, 0, len(manyIds))
+        for _, val := manyIds {
+                params = append(params, "?")
+                values = append(values, val)
+        }
+
+        q := fmt.Sprintf(`where id in(%s)`, string.Join(params, `,`))
+        db.Query(q, values...)
+
+*/
+
+func (repo *RepoMysql) GetByID(id int64) (*Item, error) <span class="cov8" title="1">{
         post := &amp;Item{}
         // QueryRow сам закрывает коннект
         err := repo.DB.
-                QueryRow("SELECT id, title, updated, description FROM items WHERE id = ?", id).
+                QueryRow(`SELECT id, title, updated, description FROM items WHERE id = ?`, id).
                 Scan(&amp;post.ID, &amp;post.Title, &amp;post.Updated, &amp;post.Description)
+        // если запись не найден - вернется sql.ErrNoRows
         if err != nil </span><span class="cov8" title="1">{
                 return nil, err
         }</span>
         <span class="cov8" title="1">return post, nil</span>
 }
 
-func (repo *ItemRepository) Add(elem *Item) (int64, error) <span class="cov8" title="1">{
+func (repo *RepoMysql) Add(elem *Item) (int64, error) <span class="cov8" title="1">{
         result, err := repo.DB.Exec(
                 "INSERT INTO items (`title`, `description`) VALUES (?, ?)",
                 elem.Title,
@@ -586,7 +623,7 @@ func (repo *ItemRepository) Add(elem *Item) (int64, error) <span class="cov8" ti
         <span class="cov8" title="1">return result.LastInsertId()</span>
 }
 
-func (repo *ItemRepository) Update(elem *Item) (int64, error) <span class="cov0" title="0">{
+func (repo *RepoMysql) Update(elem *Item) (int64, error) <span class="cov0" title="0">{
         result, err := repo.DB.Exec(
                 "UPDATE items SET"+
                         "`title` = ?"+
@@ -604,7 +641,7 @@ func (repo *ItemRepository) Update(elem *Item) (int64, error) <span class="cov0"
         <span class="cov0" title="0">return result.RowsAffected()</span>
 }
 
-func (repo *ItemRepository) Delete(id int64) (int64, error) <span class="cov0" title="0">{
+func (repo *RepoMysql) Delete(id int64) (int64, error) <span class="cov0" title="0">{
         result, err := repo.DB.Exec(
                 "DELETE FROM items WHERE id = ?",
                 id,
@@ -616,249 +653,208 @@ func (repo *ItemRepository) Delete(id int64) (int64, error) <span class="cov0" t
 }
 </pre>
 		
-		<pre class="file" id="file6" style="display: none">package middleware
+		<pre class="file" id="file6" style="display: none">package items
 
 import (
-        // "fmt"
-        "net/http"
-        "time"
-
-        "go.uber.org/zap"
+        "database/sql"
 )
 
-func AccessLog(logger *zap.SugaredLogger, next http.Handler) http.Handler <span class="cov0" title="0">{
-        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
-                // fmt.Println("access log middleware")
-                start := time.Now()
-                next.ServeHTTP(w, r)
-                logger.Infow("New request",
-                        "method", r.Method,
-                        "remote_addr", r.RemoteAddr,
-                        "url", r.URL.Path,
-                        "time", time.Since(start),
-                )
-        }</span>)
-}
-</pre>
-		
-		<pre class="file" id="file7" style="display: none">package middleware
-
-import (
-        "context"
-        // "fmt"
-        "net/http"
-
-        "crudapp/pkg/session"
-)
-
-var (
-        noAuthUrls = map[string]struct{}{
-                "/login": struct{}{},
-        }
-        noSessUrls = map[string]struct{}{
-                "/": struct{}{},
-        }
-)
-
-func Auth(sm *session.SessionsManager, next http.Handler) http.Handler <span class="cov0" title="0">{
-        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
-                // fmt.Println("auth middleware")
-                if _, ok := noAuthUrls[r.URL.Path]; ok </span><span class="cov0" title="0">{
-                        next.ServeHTTP(w, r)
-                        return
-                }</span>
-                <span class="cov0" title="0">sess, err := sm.Check(r)
-                _, canbeWithouthSess := noSessUrls[r.URL.Path]
-                if err != nil &amp;&amp; !canbeWithouthSess </span><span class="cov0" title="0">{
-                        // fmt.Println("no auth")
-                        http.Redirect(w, r, "/", 302)
-                        return
-                }</span>
-                <span class="cov0" title="0">ctx := context.WithValue(r.Context(), session.SessionKey, sess)
-                next.ServeHTTP(w, r.WithContext(ctx))</span>
-        })
-}
-</pre>
-		
-		<pre class="file" id="file8" style="display: none">package middleware
-
-import (
-        "net/http"
-)
-
-func Panic(next http.Handler) http.Handler <span class="cov0" title="0">{
-        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
-                // fmt.Println("panicMiddleware", r.URL.Path)
-                defer func() </span><span class="cov0" title="0">{
-                        if err := recover(); err != nil </span><span class="cov0" title="0">{
-                                // fmt.Println("recovered", err)
-                                http.Error(w, "Internal server error", 500)
-                        }</span>
-                }()
-                <span class="cov0" title="0">next.ServeHTTP(w, r)</span>
-        })
-}
-</pre>
-		
-		<pre class="file" id="file9" style="display: none">package session
-
-import (
-        "net/http"
-        "sync"
-        "time"
-)
-
-type SessionsManager struct {
-        data map[string]*Session
-        mu   *sync.RWMutex
+type RepoPgx struct {
+        DB *sql.DB
 }
 
-func NewSessionsMem() *SessionsManager <span class="cov0" title="0">{
-        return &amp;SessionsManager{
-                data: make(map[string]*Session, 10),
-                mu:   &amp;sync.RWMutex{},
-        }
+func NewPgxRepository(db *sql.DB) *RepoPgx <span class="cov0" title="0">{
+        return &amp;RepoPgx{DB: db}
 }</span>
 
-func (sm *SessionsManager) Check(r *http.Request) (*Session, error) <span class="cov0" title="0">{
-        sessionCookie, err := r.Cookie("session_id")
-        if err == http.ErrNoCookie </span><span class="cov0" title="0">{
-                return nil, ErrNoAuth
-        }</span>
-
-        <span class="cov0" title="0">sm.mu.RLock()
-        sess, ok := sm.data[sessionCookie.Value]
-        sm.mu.RUnlock()
-
-        if !ok </span><span class="cov0" title="0">{
-                return nil, ErrNoAuth
-        }</span>
-
-        <span class="cov0" title="0">return sess, nil</span>
-}
-
-func (sm *SessionsManager) Create(w http.ResponseWriter, userID uint32) (*Session, error) <span class="cov0" title="0">{
-        sess := NewSession(userID)
-
-        sm.mu.Lock()
-        sm.data[sess.ID] = sess
-        sm.mu.Unlock()
-
-        cookie := &amp;http.Cookie{
-                Name:    "session_id",
-                Value:   sess.ID,
-                Expires: time.Now().Add(90 * 24 * time.Hour),
-                Path:    "/",
-        }
-        http.SetCookie(w, cookie)
-        return sess, nil
-}</span>
-
-func (sm *SessionsManager) DestroyCurrent(w http.ResponseWriter, r *http.Request) error <span class="cov0" title="0">{
-        sess, err := SessionFromContext(r.Context())
+func (repo *RepoPgx) GetAll() ([]*Item, error) <span class="cov0" title="0">{
+        items := []*Item{}
+        rows, err := repo.DB.Query("SELECT id, title, updated FROM items")
         if err != nil </span><span class="cov0" title="0">{
-                return err
+                return nil, err
         }</span>
-
-        <span class="cov0" title="0">sm.mu.Lock()
-        delete(sm.data, sess.ID)
-        sm.mu.Unlock()
-
-        cookie := http.Cookie{
-                Name:    "session_id",
-                Expires: time.Now().AddDate(0, 0, -1),
-                Path:    "/",
+        <span class="cov0" title="0">defer rows.Close() // надо закрывать соединение, иначе будет течь
+        for rows.Next() </span><span class="cov0" title="0">{
+                post := &amp;Item{}
+                err = rows.Scan(&amp;post.ID, &amp;post.Title, &amp;post.Updated)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov0" title="0">items = append(items, post)</span>
         }
-        http.SetCookie(w, &amp;cookie)
-        return nil</span>
+        /*
+                func tx(db *sq.DB, fb func(tx *sql.Tx) error) error {
+                        tx := repo.DB.Begin()
+                        err := fb(tx)
+                        if err != nil {
+                                tx.Rollback()
+                                return err
+                        }
+                        tx.Commit()
+                        return nil
+                }
+
+                tx(repo.DB, func(tx *sql.Tx) error {
+                        tx.Query("select")
+
+                        if err != nil {
+                                return err
+                        }
+
+                        tx.Exec("update")
+
+                        return nil
+                })
+        */
+
+        <span class="cov0" title="0">return items, nil</span>
+}
+
+func (repo *RepoPgx) GetByID(id int64) (*Item, error) <span class="cov0" title="0">{
+        post := &amp;Item{}
+        // QueryRow сам закрывает коннект
+        err := repo.DB.
+                QueryRow(`SELECT id, title, updated, description FROM items WHERE id = $1`, id).
+                Scan(&amp;post.ID, &amp;post.Title, &amp;post.Updated, &amp;post.Description)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return post, nil</span>
+}
+
+func (repo *RepoPgx) Add(elem *Item) (int64, error) <span class="cov0" title="0">{
+        var lastInsertId int64
+        err := repo.DB.QueryRow(
+                `INSERT INTO items ("title", "description") VALUES ($1, $2) RETURNING id`,
+                elem.Title,
+                elem.Description,
+        ).Scan(&amp;lastInsertId)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return lastInsertId, nil</span>
+}
+
+func (repo *RepoPgx) Update(elem *Item) (int64, error) <span class="cov0" title="0">{
+        result, err := repo.DB.Exec(
+                `UPDATE items SET "title" = $1`+
+                        `,"description" = $2`+
+                        `,"updated" = $3`+
+                        `WHERE id = $4`,
+                elem.Title,
+                elem.Description,
+                "rvasily",
+                elem.ID,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return result.RowsAffected()</span>
+}
+
+func (repo *RepoPgx) Delete(id int64) (int64, error) <span class="cov0" title="0">{
+        result, err := repo.DB.Exec(
+                "DELETE FROM items WHERE id = $1",
+                id,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return result.RowsAffected()</span>
 }
 </pre>
 		
-		<pre class="file" id="file10" style="display: none">package session
+		<pre class="file" id="file7" style="display: none">package items
 
 import (
-        "context"
-        "crypto/rand"
-        "errors"
-        "fmt"
+        // "database/sql"
+        "github.com/jmoiron/sqlx"
 )
 
-type Session struct {
-        ID     string
-        UserID uint32
+type RepoSqlx struct {
+        DB *sqlx.DB
 }
 
-func NewSession(userID uint32) *Session <span class="cov0" title="0">{
-        // лучше генерировать из заданного алфавита, но так писать меньше и для учебного примера ОК
-        randID := make([]byte, 16)
-        rand.Read(randID)
-
-        return &amp;Session{
-                ID:     fmt.Sprintf("%x", randID),
-                UserID: userID,
-        }
+func NewSqlxRepository(db *sqlx.DB) *RepoSqlx <span class="cov0" title="0">{
+        return &amp;RepoSqlx{DB: db}
 }</span>
 
-var (
-        ErrNoAuth = errors.New("No session found")
-)
-
-type sessKey string
-
-var SessionKey sessKey = "sessionKey"
-
-func SessionFromContext(ctx context.Context) (*Session, error) <span class="cov0" title="0">{
-        sess, ok := ctx.Value(SessionKey).(*Session)
-        if !ok || sess == nil </span><span class="cov0" title="0">{
-                return nil, ErrNoAuth
+func (repo *RepoSqlx) GetAll() ([]*Item, error) <span class="cov0" title="0">{
+        items := make([]*Item, 0, 10)
+        err := repo.DB.Select(&amp;items, "SELECT id, title, updated FROM items")
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
         }</span>
-        <span class="cov0" title="0">return sess, nil</span>
-}
-</pre>
-		
-		<pre class="file" id="file11" style="display: none">package user
-
-import "errors"
-
-type User struct {
-        ID       uint32
-        Login    string
-        password string
+        <span class="cov0" title="0">return items, nil</span>
 }
 
-type UserRepo struct {
-        data map[string]*User
-}
-
-func NewUserRepo() *UserRepo <span class="cov0" title="0">{
-        return &amp;UserRepo{
-                data: map[string]*User{
-                        "rvasily": &amp;User{
-                                ID:       1,
-                                Login:    "rvasily",
-                                password: "love",
-                        },
-                },
+func (repo *RepoSqlx) GetAll_0() ([]*Item, error) <span class="cov0" title="0">{
+        items := make([]*Item, 0, 10)
+        rows, err := repo.DB.Queryx("SELECT id, title, updated FROM items")
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">for rows.Next() </span><span class="cov0" title="0">{
+                item := &amp;Item{}
+                // MapScan, SliceScan
+                err := rows.StructScan(&amp;item)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+                <span class="cov0" title="0">items = append(items, item)</span>
         }
-}</span>
+        <span class="cov0" title="0">return items, nil</span>
+}
 
-var (
-        ErrNoUser  = errors.New("No user found")
-        ErrBadPass = errors.New("Invald password")
-)
-
-func (repo *UserRepo) Authorize(login, pass string) (*User, error) <span class="cov0" title="0">{
-        u, ok := repo.data[login]
-        if !ok </span><span class="cov0" title="0">{
-                return nil, ErrNoUser
+func (repo *RepoSqlx) GetByID(id int64) (*Item, error) <span class="cov0" title="0">{
+        post := &amp;Item{}
+        err := repo.DB.Get(post, `SELECT id, title, updated, description FROM items WHERE id = ?`, id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
         }</span>
+        <span class="cov0" title="0">return post, nil</span>
+}
 
-        // dont do this un production :)
-        <span class="cov0" title="0">if u.password != pass </span><span class="cov0" title="0">{
-                return nil, ErrBadPass
+func (repo *RepoSqlx) Add(elem *Item) (int64, error) <span class="cov0" title="0">{
+        result, err := repo.DB.NamedExec(
+                `INSERT INTO person (first_name,last_name,email) VALUES (:title, :description)`,
+                map[string]interface{}{
+                        "title":       elem.Title,
+                        "description": elem.Description,
+                })
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
         }</span>
+        <span class="cov0" title="0">return result.LastInsertId()</span>
+}
 
-        <span class="cov0" title="0">return u, nil</span>
+func (repo *RepoSqlx) Update(elem *Item) (int64, error) <span class="cov0" title="0">{
+        result, err := repo.DB.Exec(
+                "UPDATE items SET"+
+                        "`title` = ?"+
+                        ",`description` = ?"+
+                        ",`updated` = ?"+
+                        "WHERE id = ?",
+                elem.Title,
+                elem.Description,
+                "rvasily",
+                elem.ID,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return result.RowsAffected()</span>
+}
+
+func (repo *RepoSqlx) Delete(id int64) (int64, error) <span class="cov0" title="0">{
+        result, err := repo.DB.Exec(
+                "DELETE FROM items WHERE id = ?",
+                id,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, err
+        }</span>
+        <span class="cov0" title="0">return result.RowsAffected()</span>
 }
 </pre>
 		

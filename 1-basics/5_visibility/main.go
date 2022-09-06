@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	prsonModule "visibility/person"
+	prsonModule "github.com/go-park-mail-ru/lectures/1-basics/5_visibility/person"
 )
 
 func init() {

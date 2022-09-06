@@ -1,9 +1,10 @@
 package repository
 
 import (
-	"echo_example/model"
-	"echo_example/user"
 	"sync"
+
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/model"
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/user"
 )
 
 func NewUserMemoryRepository() user.Repository {

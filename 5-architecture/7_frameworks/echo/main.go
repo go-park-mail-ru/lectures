@@ -1,10 +1,10 @@
 package main
 
 import (
-	"echo_example/middleware"
-	userhttp "echo_example/user/delivery/http"
-	"echo_example/user/repository"
-	"echo_example/user/usecase"
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/middleware"
+	userhttp "github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/user/delivery/http"
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/user/repository"
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/user/usecase"
 
 	"github.com/labstack/echo"
 	echomiddleware "github.com/labstack/echo/middleware"

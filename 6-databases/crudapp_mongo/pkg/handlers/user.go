@@ -4,8 +4,8 @@ import (
 	"html/template"
 	"net/http"
 
-	"crudapp/pkg/session"
-	"crudapp/pkg/user"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_mongo/pkg/session"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_mongo/pkg/user"
 
 	"go.uber.org/zap"
 )

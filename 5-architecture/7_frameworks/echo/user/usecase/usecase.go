@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"echo_example/model"
-	"echo_example/user"
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/model"
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/user"
 )
 
 func NewUserUsecase(userRepo user.Repository) user.Usecase {

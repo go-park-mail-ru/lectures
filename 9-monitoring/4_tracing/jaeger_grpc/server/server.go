@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/go-park-mail-ru/lectures/9-monitoring/tracing/jaeger_grpc/session"
+	"github.com/go-park-mail-ru/lectures/9-monitoring/4_tracing/jaeger_grpc/session"
 	traceutils "github.com/opentracing-contrib/go-grpc"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"

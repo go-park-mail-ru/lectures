@@ -1,6 +1,6 @@
 package user
 
-import "echo_example/model"
+import "github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/model"
 
 type Usecase interface {
 	GetUser(username string) (model.User, error)

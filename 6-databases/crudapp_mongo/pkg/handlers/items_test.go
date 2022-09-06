@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"crudapp/pkg/items"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_mongo/pkg/items"
 
 	"github.com/golang/mock/gomock"
 	"go.uber.org/zap"

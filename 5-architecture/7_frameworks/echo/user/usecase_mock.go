@@ -5,7 +5,7 @@
 package user
 
 import (
-	model "echo_example/model"
+	model "github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/model"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 )

@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	_ "github.com/go-park-mail-ru/lectures/4/4_swagger/docs"
+	_ "github.com/go-park-mail-ru/lectures/4-api/4_swagger/docs"
 
 	httpSwagger "github.com/swaggo/http-swagger"
 )
