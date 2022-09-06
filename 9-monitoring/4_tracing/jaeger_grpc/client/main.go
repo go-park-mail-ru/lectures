@@ -3,19 +3,20 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/opentracing/opentracing-go"
-	"github.com/uber/jaeger-client-go"
-	jaegercfg "github.com/uber/jaeger-client-go/config"
-	jaegerlog "github.com/uber/jaeger-client-go/log"
-	traceutils "github.com/opentracing-contrib/go-grpc"
-	"github.com/uber/jaeger-lib/metrics"
 	"log"
 	"net/http"
 	"time"
 
+	traceutils "github.com/opentracing-contrib/go-grpc"
+	"github.com/opentracing/opentracing-go"
+	"github.com/uber/jaeger-client-go"
+	jaegercfg "github.com/uber/jaeger-client-go/config"
+	jaegerlog "github.com/uber/jaeger-client-go/log"
+	"github.com/uber/jaeger-lib/metrics"
+
 	"google.golang.org/grpc"
 
-	"github.com/go-park-mail-ru/lectures/9-monitoring/tracing/jaeger_grpc/session"
+	"github.com/go-park-mail-ru/lectures/9-monitoring/4_tracing/jaeger_grpc/session"
 )
 
 var loginFormTmpl = []byte(`

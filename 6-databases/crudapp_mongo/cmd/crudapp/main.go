@@ -7,11 +7,11 @@ import (
 	"net/http"
 	"time"
 
-	"crudapp/pkg/handlers"
-	"crudapp/pkg/items"
-	"crudapp/pkg/middleware"
-	"crudapp/pkg/session"
-	"crudapp/pkg/user"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_mongo/pkg/handlers"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_mongo/pkg/items"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_mongo/pkg/middleware"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_mongo/pkg/session"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_mongo/pkg/user"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"

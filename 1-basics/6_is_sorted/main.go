@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/go-park-mail-ru/lectures/6_is_sorted/sorted"
+	"github.com/go-park-mail-ru/lectures/1-basics/6_is_sorted/sorted"
 )
 
 func main() {
@@ -27,4 +27,3 @@ func main() {
 	log.Println("strings are sorted")
 
 }
-

@@ -1,10 +1,10 @@
 package http
 
 import (
-	"echo_example/middleware"
-	"echo_example/user"
 	"errors"
 
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/middleware"
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/user"
 	"github.com/labstack/echo"
 )
 

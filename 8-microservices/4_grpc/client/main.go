@@ -9,7 +9,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"lectures/7/4_grpc/session"
+	"github.com/go-park-mail-ru/lectures/8-microservices/4_grpc/session"
 )
 
 var loginFormTmpl = []byte(`

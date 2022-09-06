@@ -1,14 +1,14 @@
 package http
 
 import (
-	"echo_example/model"
-	"echo_example/user"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/model"
+	"github.com/go-park-mail-ru/lectures/5-architecture/7_frameworks/echo/user"
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo"
 )

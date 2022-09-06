@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	sqlmock "gopkg.in/DATA-DOG/go-sqlmock.v1"
+	sqlmock "github.com/DATA-DOG/go-sqlmock"
 )
 
 // go test -coverprofile=cover.out && go tool cover -html=cover.out -o cover.html

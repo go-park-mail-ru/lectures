@@ -5,7 +5,7 @@ import (
 	// "fmt"
 	"net/http"
 
-	"crudapp/pkg/session"
+	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/session"
 )
 
 var (
