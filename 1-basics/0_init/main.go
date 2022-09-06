@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"sample/transaction"
-	"github.com/satori/go.uuid"
 	"os"
+
+	"github.com/go-park-mail-ru/lectures/1-basics/0_init/transaction"
+	uuid "github.com/satori/go.uuid"
 )
 
 func main() {
@@ -21,7 +22,6 @@ func main() {
 	}
 
 	list.Add(t)
-
 
 	fmt.Println(list.Get())
 
