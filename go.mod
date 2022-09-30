@@ -52,7 +52,7 @@ require (
 	github.com/uber/jaeger-lib v2.4.1+incompatible
 	github.com/valyala/fasthttp v1.40.0
 	github.com/vektah/gqlparser v1.3.1
-	github.com/vektah/gqlparser/v2 v2.5.0
+	github.com/vektah/gqlparser/v2 v2.5.0 // indirect
 	go.mongodb.org/mongo-driver v1.10.1
 	go.uber.org/zap v1.17.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d

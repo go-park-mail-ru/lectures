@@ -2,11 +2,10 @@ package main
 
 import (
 	"context"
+	gqlgen "gqlgen4"
 	"log"
 	"net/http"
 	"time"
-
-	gqlgen "github.com/go-park-mail-ru/lectures/4-api/3_graphql/gqlgen_full/gqlgen4"
 
 	"github.com/99designs/gqlgen/handler"
 )

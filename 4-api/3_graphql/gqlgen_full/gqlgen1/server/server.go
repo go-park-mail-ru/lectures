@@ -1,11 +1,10 @@
 package main
 
 import (
+	gqlgen "gqlgen1"
 	"log"
 	"net/http"
 	"os"
-
-	gqlgen "github.com/go-park-mail-ru/lectures/4-api/3_graphql/gqlgen_full/gqlgen1"
 
 	"github.com/99designs/gqlgen/handler"
 )
