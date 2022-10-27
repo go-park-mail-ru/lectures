@@ -18,6 +18,13 @@ bob /menu read
     /admin/user/edit
     /admin/user/moderate
 
+2
+    /admin/user/edit
+
+3
+    /admin/user/edit
+
+
 -------------------------------
 
 RBAC:

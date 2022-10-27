@@ -4,6 +4,8 @@ import (
 	"testing"
 )
 
+// go test -bench . -benchmem pass.go pass_bench_test.go
+
 func BenchmarkMD5(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		PasswordMD5(plainPassword)

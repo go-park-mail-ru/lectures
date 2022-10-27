@@ -23,8 +23,6 @@ func PasswordMD5(plainPassword []byte) []byte {
 	return md5.New().Sum(plainPassword)
 }
 
-// https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Password_Storage_Cheat_Sheet.md
-
 // bcrypt where PBKDF2 or scrypt support is not available.
 func PasswordBcrypt(plainPassword []byte) []byte {
 	passBcrypt, _ := bcrypt.GenerateFromPassword(plainPassword, 7)
@@ -47,6 +45,8 @@ func PasswordArgon2(plainPassword []byte) []byte {
 	return argon2.IDKey(plainPassword, salt, 1, 64*1024, 4, 32)
 }
 
+// https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Password_Storage_Cheat_Sheet.md
+// https://cheatsheetseries.owasp.org
 func main() {
 	fmt.Printf("PasswordMD5: %x\n", PasswordMD5(plainPassword))
 	fmt.Printf("PasswordBcrypt: %x\n", PasswordBcrypt(plainPassword))

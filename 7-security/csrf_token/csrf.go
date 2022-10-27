@@ -91,9 +91,9 @@ func main() {
 	tmpl := template.New("main")
 	tmpl, _ = tmpl.Parse(messagesTmpl)
 
-	// tokens, _ := NewHMACHashToken("golangcourse")
-	// tokens, _ := NewAesCryptHashToken("qsRY2e4hcM5T7X984E9WQ5uZ8Nty7fxB")
-	tokens, _ := NewJwtToken("qsRY2e4hcM5T7X984E9WQ5uZ8Nty7fxB")
+	tokens, _ := NewHMACHashToken("golangcourse") //только хеш фиксированных данных
+	// tokens, _ := NewAesCryptHashToken("qsRY2e4hcM5T7X984E9WQ5uZ8Nty7fxB") // можно еще че-то хранить и шифровать. без расшифровки не видно
+	// tokens, _ := NewJwtToken("qsRY2e4hcM5T7X984E9WQ5uZ8Nty7fxB") // можно так же че-то хранить и подписывать. видно, но нельзя подделать
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		sess, err := checkSession(r)
@@ -159,7 +159,8 @@ func main() {
 
 		emptyResponse := []byte(`{"id":0, "rating":0}`)
 		sess, err := checkSession(r)
-		if err != nil || r.Method == http.MethodGet {
+		// if err != nil || r.Method == http.MethodGet {
+		if err != nil {
 			w.Write([]byte(emptyResponse))
 			return
 		}

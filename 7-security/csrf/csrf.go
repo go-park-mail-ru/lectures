@@ -79,6 +79,7 @@ var messagesTmpl = `<html>
     {{end}}
 </body></html>`
 
+// https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html
 func main() {
 
 	tmpl := template.New("main")
@@ -122,7 +123,8 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 
 		emptyResponse := []byte(`{"id":0, "rating":0}`)
-		if !checkSession(r) || r.Method == http.MethodGet {
+		// if !checkSession(r) || r.Method == http.MethodGet {
+		if !checkSession(r) {
 			w.Write([]byte(emptyResponse))
 			return
 		}
