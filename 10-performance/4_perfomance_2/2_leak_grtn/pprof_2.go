@@ -30,9 +30,10 @@ func longHeavyWork(ch chan bool) {
 }
 
 func handleLeak(w http.ResponseWriter, req *http.Request) {
-	res := make(chan bool)
-	go longHeavyWork(res)
-	 <-res
+	res := make(chan []Post)
+	go getPost(res)
+	return
+	<-res
 }
 
 func main() {
