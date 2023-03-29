@@ -191,7 +191,7 @@ func checkSession(r *http.Request) bool {
 	return true
 }
 
-//PanicOnErr panics on error
+// PanicOnErr panics on error
 func PanicOnErr(err error) {
 	if err != nil {
 		panic(err)

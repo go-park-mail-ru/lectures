@@ -1,0 +1,15 @@
+# 1 шаг
+FROM golang:1.19-alpine AS build_stage
+COPY ./code /go/src/my_super_app
+WORKDIR /go/src/my_super_app
+RUN go install .
+
+# 2 шаг
+FROM alpine AS run_stage
+WORKDIR /app_binary
+COPY --from=build_stage /go/bin/my_super_app /app_binary/
+RUN chmod +x ./my_super_app
+EXPOSE 8080/tcp
+ENTRYPOINT ./my_super_app
+
+EXPOSE 8080/tcp

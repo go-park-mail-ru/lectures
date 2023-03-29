@@ -6,22 +6,22 @@ alice /menu write
 bob /menu read
 
 /admin/user/edit
-    1
-    2
-    3
+    userid=1
+    userid=2
+    userid=3
 /admin/user/moderate
-    1
+    userid=1
 
 -------
 
-1
+userid=1
     /admin/user/edit
     /admin/user/moderate
 
-2
+userid=2
     /admin/user/edit
 
-3
+userid=3
     /admin/user/edit
 
 

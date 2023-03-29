@@ -12,3 +12,4 @@ services:
       - ./nginx:/etc/nginx/conf.d
     ports:
       - 8080:80
+

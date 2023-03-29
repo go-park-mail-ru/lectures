@@ -85,3 +85,5 @@ func (tk *JwtToken) parseSecretGetterMultiKeys(token *jwt.Token) (interface{}, e
 	return secret, nil
 }
 */
+
+// https://specialistoff.net/page/902
