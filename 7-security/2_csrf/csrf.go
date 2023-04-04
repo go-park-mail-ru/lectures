@@ -123,8 +123,8 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 
 		emptyResponse := []byte(`{"id":0, "rating":0}`)
-		// if !checkSession(r) || r.Method == http.MethodGet {
-		if !checkSession(r) {
+		if !checkSession(r) || r.Method == http.MethodGet {
+			// if !checkSession(r) {
 			w.Write([]byte(emptyResponse))
 			return
 		}

@@ -1,4 +1,4 @@
-# 1 шаг
+# 1 шаг - сборки
 FROM golang:1.19-alpine AS build_stage
 COPY ./code /go/src/my_super_app
 WORKDIR /go/src/my_super_app
@@ -11,5 +11,3 @@ COPY --from=build_stage /go/bin/my_super_app /app_binary/
 RUN chmod +x ./my_super_app
 EXPOSE 8080/tcp
 ENTRYPOINT ./my_super_app
-
-EXPOSE 8080/tcp

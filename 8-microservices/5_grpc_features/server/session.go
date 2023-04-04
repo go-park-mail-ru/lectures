@@ -9,8 +9,9 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 
-	"context"
+	"golang.org/x/net/context"
 )
 
 const sessKeyLen = 10
@@ -31,9 +32,14 @@ func NewSessionManager() *SessionManager {
 
 func (sm *SessionManager) Create(ctx context.Context, in *session.Session) (*session.SessionID, error) {
 	fmt.Println("call Create", in)
-	id := &session.SessionID{
-		ID: RandStringRunes(sessKeyLen),
-	}
+
+	header := metadata.Pairs("header-key", "42")
+	grpc.SendHeader(ctx, header)
+
+	trailer := metadata.Pairs("trailer-key", "3.14")
+	grpc.SetTrailer(ctx, trailer)
+
+	id := &session.SessionID{ID: RandStringRunes(sessKeyLen)}
 	sm.mu.Lock()
 	sm.sessions[id.ID] = in
 	sm.mu.Unlock()

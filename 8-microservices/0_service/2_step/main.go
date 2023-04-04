@@ -1,15 +1,9 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
-
-	"google.golang.org/grpc"
-
-	"github.com/go-park-mail-ru/lectures/8-microservices/4_grpc/session"
 )
 
 var loginFormTmpl = []byte(`
@@ -25,10 +19,10 @@ var loginFormTmpl = []byte(`
 `)
 
 var (
-	sessManager session.AuthCheckerClient
+	sessManager SessionManagerInterface
 )
 
-func checkSession(r *http.Request) (*session.Session, error) {
+func checkSession(r *http.Request) (*Session, error) {
 	cookieSessionID, err := r.Cookie("session_id")
 	if err == http.ErrNoCookie {
 		return nil, nil
@@ -36,21 +30,16 @@ func checkSession(r *http.Request) (*session.Session, error) {
 		return nil, err
 	}
 
-	sess, err := sessManager.Check(
-		context.Background(),
-		&session.SessionID{
-			ID: cookieSessionID.Value,
-		})
-	if err != nil {
-		return nil, err
-	}
+	sess := sessManager.Check(&SessionID{
+		ID: cookieSessionID.Value,
+	})
 	return sess, nil
 }
 
 func innerPage(w http.ResponseWriter, r *http.Request) {
 	sess, err := checkSession(r)
 	if err != nil {
-		w.Write(loginFormTmpl)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	if sess == nil {
@@ -68,12 +57,10 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 	inputLogin := r.FormValue("login")
 	expiration := time.Now().Add(365 * 24 * time.Hour)
 
-	sess, err := sessManager.Create(
-		context.Background(),
-		&session.Session{
-			Login:     inputLogin,
-			Useragent: r.UserAgent(),
-		})
+	sess, err := sessManager.Create(&Session{
+		Login:     inputLogin,
+		Useragent: r.UserAgent(),
+	})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -90,16 +77,7 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	grcpConn, err := grpc.Dial(
-		"127.0.0.1:8081",
-		grpc.WithInsecure(),
-	)
-	if err != nil {
-		log.Fatalf("cant connect to grpc")
-	}
-	defer grcpConn.Close()
-
-	sessManager = session.NewAuthCheckerClient(grcpConn)
+	sessManager = NewSessionManager()
 
 	http.HandleFunc("/", innerPage)
 	http.HandleFunc("/login", loginPage)
@@ -109,7 +87,7 @@ func main() {
 }
 
 func logoutPage(w http.ResponseWriter, r *http.Request) {
-	cookieSessionID, err := r.Cookie("session_id")
+	session, err := r.Cookie("session_id")
 	if err == http.ErrNoCookie {
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
@@ -118,14 +96,12 @@ func logoutPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sessManager.Delete(
-		context.Background(),
-		&session.SessionID{
-			ID: cookieSessionID.Value,
-		})
+	sessManager.Delete(&SessionID{
+		ID: session.Value,
+	})
 
-	cookieSessionID.Expires = time.Now().AddDate(0, 0, -1)
-	http.SetCookie(w, cookieSessionID)
+	session.Expires = time.Now().AddDate(0, 0, -1)
+	http.SetCookie(w, session)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }

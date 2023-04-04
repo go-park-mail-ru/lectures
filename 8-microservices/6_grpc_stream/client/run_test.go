@@ -1,20 +1,17 @@
 package main
 
 import (
-	"bufio"
 	"context"
-	"fmt"
 	"io"
 	"log"
-	"os"
 	"sync"
-
-	"google.golang.org/grpc"
+	"testing"
 
 	"github.com/go-park-mail-ru/lectures/8-microservices/6_grpc_stream/translit"
+	"google.golang.org/grpc"
 )
 
-func main() {
+func Test(t *testing.T) {
 	grcpConn, err := grpc.Dial(
 		"127.0.0.1:8081",
 		grpc.WithInsecure(),
@@ -30,31 +27,38 @@ func main() {
 	stream, _ := tr.EnRu(ctx)
 
 	wg := &sync.WaitGroup{}
-	wg.Add(1)
+	wg.Add(2)
 
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
 		for {
 			outWord, err := stream.Recv()
 			if err == io.EOF {
-				fmt.Println("\tstream closed")
+				log.Println("\tstream closed")
 				return
 			} else if err != nil {
-				fmt.Println("\terror happed", err)
+				log.Println("\terror happed", err)
 				return
 			}
-			fmt.Println(" <-", outWord.Word)
+			log.Println(" <-", outWord.Word)
 		}
 	}(wg)
 
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		_ = stream.Send(&translit.Word{
-			Word: scanner.Text(),
-		})
-	}
-	stream.CloseSend()
+	go func(wg *sync.WaitGroup) {
+		defer wg.Done()
+		words := []string{"privet", "kak", "dela"}
+		for _, w := range words {
+			log.Println("-> ", w)
+			stream.Send(&translit.Word{
+				Word: w,
+			})
+			//time.Sleep(2 * time.Second)
+		}
+		stream.CloseSend()
+		log.Println("\tsend done")
+	}(wg)
 
 	wg.Wait()
 
+	t.Fail()
 }

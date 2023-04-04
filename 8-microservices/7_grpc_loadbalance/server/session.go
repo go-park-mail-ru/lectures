@@ -7,10 +7,7 @@ import (
 
 	"github.com/go-park-mail-ru/lectures/8-microservices/4_grpc/session"
 
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-
-	"context"
+	"golang.org/x/net/context"
 )
 
 const sessKeyLen = 10
@@ -20,20 +17,20 @@ type SessionManager struct {
 
 	mu       sync.RWMutex
 	sessions map[string]*session.Session
+	host     string
 }
 
-func NewSessionManager() *SessionManager {
+func NewSessionManager(port string) *SessionManager {
 	return &SessionManager{
 		mu:       sync.RWMutex{},
 		sessions: map[string]*session.Session{},
+		host:     port,
 	}
 }
 
 func (sm *SessionManager) Create(ctx context.Context, in *session.Session) (*session.SessionID, error) {
 	fmt.Println("call Create", in)
-	id := &session.SessionID{
-		ID: RandStringRunes(sessKeyLen),
-	}
+	id := &session.SessionID{ID: RandStringRunes(sessKeyLen)}
 	sm.mu.Lock()
 	sm.sessions[id.ID] = in
 	sm.mu.Unlock()
@@ -42,12 +39,9 @@ func (sm *SessionManager) Create(ctx context.Context, in *session.Session) (*ses
 
 func (sm *SessionManager) Check(ctx context.Context, in *session.SessionID) (*session.Session, error) {
 	fmt.Println("call Check", in)
-	sm.mu.RLock()
-	defer sm.mu.RUnlock()
-	if sess, ok := sm.sessions[in.ID]; ok {
-		return sess, nil
-	}
-	return nil, grpc.Errorf(codes.NotFound, "session not found")
+	// между сервисами нет общения, возвращаем заглушку
+	fakeLogin := sm.host + " " + in.GetID()
+	return &session.Session{Login: fakeLogin}, nil
 }
 
 func (sm *SessionManager) Delete(ctx context.Context, in *session.SessionID) (*session.Nothing, error) {

@@ -35,9 +35,9 @@ func passExample() {
 	fmt.Printf("passValid: %v\n", passValid)
 }
 
-func main() {
-	for i := 0; i < 3; i++ {
-		fmt.Println("\titeration", i)
-		passExample()
-	}
-}
+// func main() {
+// 	for i := 0; i < 3; i++ {
+// 		fmt.Println("\titeration", i)
+// 		passExample()
+// 	}
+// }

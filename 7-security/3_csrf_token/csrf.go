@@ -91,9 +91,9 @@ func main() {
 	tmpl := template.New("main")
 	tmpl, _ = tmpl.Parse(messagesTmpl)
 
-	tokens, _ := NewHMACHashToken("golangcourse") //только хеш фиксированных данных
+	// tokens, _ := NewHMACHashToken("golangcourse") //только хеш фиксированных данных
 	// tokens, _ := NewAesCryptHashToken("qsRY2e4hcM5T7X984E9WQ5uZ8Nty7fxB") // можно еще че-то хранить и шифровать. без расшифровки не видно
-	// tokens, _ := NewJwtToken("qsRY2e4hcM5T7X984E9WQ5uZ8Nty7fxB") // можно так же че-то хранить и подписывать. видно, но нельзя подделать
+	tokens, _ := NewJwtToken("qsRY2e4hcM5T7X984E9WQ5uZ8Nty7fxB") // можно так же че-то хранить и подписывать. видно, но нельзя подделать
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		sess, err := checkSession(r)
@@ -235,7 +235,7 @@ func checkSession(r *http.Request) (*Session, error) {
 	return sess, nil
 }
 
-//PanicOnErr panics on error
+// PanicOnErr panics on error
 func PanicOnErr(err error) {
 	if err != nil {
 		panic(err)

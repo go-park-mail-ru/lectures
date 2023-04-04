@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+option go_package = "./;main";
 // protoc --go_out=. *.proto
 
 package main;
@@ -10,5 +11,5 @@ message SessionID {
 
 message Session {
   string login = 1;
-  string useragent = 3;
+  string useragent = 2;
 }

@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+
 	// "strings"
 	"time"
 )
@@ -92,7 +93,5 @@ func (tk *CryptToken) Check(s *Session, inputToken string) (bool, error) {
 		return false, fmt.Errorf("token expired")
 	}
 
-	expected := TokenData{SessionID: s.ID, UserID: s.UserID}
-	td.Exp = 0
-	return td == expected, nil
+	return s.ID == td.SessionID && s.UserID == td.UserID, nil
 }
