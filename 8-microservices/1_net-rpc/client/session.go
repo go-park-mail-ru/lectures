@@ -38,7 +38,6 @@ func NewSessionManager() *SessionManager {
 
 func (sm *SessionManager) Create(in *Session) (*SessionID, error) {
 	id := new(SessionID)
-	fmt.Println("call Create", in)
 	err := sm.client.Call("SessionManager.Create", in, id)
 	if err != nil {
 		fmt.Println("SessionManager.Create error:", err)
@@ -49,7 +48,6 @@ func (sm *SessionManager) Create(in *Session) (*SessionID, error) {
 
 func (sm *SessionManager) Check(in *SessionID) *Session {
 	sess := new(Session)
-	fmt.Println("call Check", in)
 	err := sm.client.Call("SessionManager.Check", in, sess)
 	if err != nil {
 		fmt.Println("SessionManager.Check error:", err)
@@ -60,7 +58,6 @@ func (sm *SessionManager) Check(in *SessionID) *Session {
 
 func (sm *SessionManager) Delete(in *SessionID) {
 	var reply int
-	fmt.Println("call Delete", in)
 	err := sm.client.Call("SessionManager.Delete", in, &reply)
 	if err != nil {
 		fmt.Println("SessionManager.Delete error:", err)

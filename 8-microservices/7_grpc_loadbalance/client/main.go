@@ -45,6 +45,10 @@ func main() {
 		servers = append(servers, resolver.Address{Addr: addr})
 	}
 
+	if len(servers) == 0 {
+		panic("no alive session-api servers")
+	}
+
 	nameResolver := manual.NewBuilderWithScheme("myservice")
 	nameResolver.InitialState(resolver.State{Addresses: servers})
 
