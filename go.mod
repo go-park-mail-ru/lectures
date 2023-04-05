@@ -13,6 +13,7 @@ require (
 	github.com/casbin/casbin v1.9.1
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/gen1us2k/go-translit v0.0.0-20160120121136-46f1a0be552c
 	github.com/getsentry/sentry-go v0.13.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect

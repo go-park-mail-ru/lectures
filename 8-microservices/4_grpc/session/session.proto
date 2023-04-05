@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-// protoc --go_out=. --go-grpc_out=. --go-grpc_opt=paths=source_relative --go_opt=paths=source_relative *.proto  
+// protoc --go_out=. --go-grpc_out=. *.proto  
 option go_package = "./;session";
 
 package session;

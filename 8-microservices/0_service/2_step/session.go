@@ -27,7 +27,7 @@ type SessionManager struct {
 	sessions map[SessionID]*Session
 }
 
-func NewSessionManager() *SessionManager {
+func NewSessionManagerInMemory() *SessionManager {
 	return &SessionManager{
 		mu:       sync.RWMutex{},
 		sessions: map[SessionID]*Session{},

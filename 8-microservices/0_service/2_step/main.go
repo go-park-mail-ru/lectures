@@ -77,7 +77,7 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	sessManager = NewSessionManager()
+	sessManager = NewSessionManagerInMemory()
 
 	http.HandleFunc("/", innerPage)
 	http.HandleFunc("/login", loginPage)

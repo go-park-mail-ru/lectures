@@ -13,4 +13,3 @@ message Word {
 service Transliteration {
     rpc EnRu (stream Word) returns (stream Word) {}
 }
-

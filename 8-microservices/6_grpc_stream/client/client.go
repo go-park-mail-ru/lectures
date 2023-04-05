@@ -27,7 +27,10 @@ func main() {
 	tr := translit.NewTransliterationClient(grcpConn)
 
 	ctx := context.Background()
-	stream, _ := tr.EnRu(ctx)
+	stream, err := tr.EnRu(ctx)
+	if err != nil {
+		println(err)
+	}
 
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
@@ -49,9 +52,12 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		_ = stream.Send(&translit.Word{
+		errSend := stream.Send(&translit.Word{
 			Word: scanner.Text(),
 		})
+		if err != nil {
+			println(errSend)
+		}
 	}
 	stream.CloseSend()
 
