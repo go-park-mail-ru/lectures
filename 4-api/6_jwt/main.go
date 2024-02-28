@@ -30,8 +30,10 @@ func main() {
 		}
 
 		cookie := &http.Cookie{
-			Name:  "session_id",
-			Value: str,
+			Name:     "session_id",
+			Value:    str,
+			HttpOnly: true,
+			SameSite: http.SameSiteDefaultMode,
 		}
 
 		http.SetCookie(w, cookie)
@@ -60,5 +62,5 @@ func main() {
 		fmt.Println(err)
 	})
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8081", nil)
 }

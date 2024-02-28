@@ -17,7 +17,7 @@ http://127.0.0.1:8080/graphql?query=mutation+_{create(title:%22taocp%22,price:25
 
 Read
 http://127.0.0.1:8080/graphql?query={books{id,title,author{name}}}
-http://127.0.0.1:8080/graphql?query={book(id:1){id,title,author{name}}}
+http://127.0.0.1:8080/graphql?query={book(id:1){id,title}}
 
 Update
 http://127.0.0.1:8080/graphql?query=mutation+_{update(id:1,price:42.0,title:"test"){id,title,price}}

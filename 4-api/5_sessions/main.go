@@ -40,7 +40,7 @@ func NewMyHandler() *MyHandler {
 	}
 }
 
-// http://127.0.0.1:8080/login?login=rvsily&password=love
+// http://127.0.0.1:8081/login?login=rvasily&password=love
 
 func (api *MyHandler) Login(w http.ResponseWriter, r *http.Request) {
 
@@ -62,6 +62,7 @@ func (api *MyHandler) Login(w http.ResponseWriter, r *http.Request) {
 	cookie := &http.Cookie{
 		Name:    "session_id",
 		Value:   SID,
+		Path:    "/",
 		Expires: time.Now().Add(10 * time.Hour),
 	}
 	http.SetCookie(w, cookie)
@@ -110,5 +111,5 @@ func main() {
 	r.HandleFunc("/login", api.Login)
 	r.HandleFunc("/logout", api.Logout)
 
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":8081", r)
 }
