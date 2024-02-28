@@ -1,0 +1,18 @@
+type Author {
+  name: String!
+}
+
+type Book {
+  id: ID!
+  title: String!
+  price: Float!
+  author: Author
+}
+
+type Query {
+  books: [Book!]!
+}
+
+# go run github.com/99designs/gqlgen init
+# go run github.com/99designs/gqlgen -v
+# rm -rf generated.go models_generated gqlgen.yml models_gen.go resolver.go server.go
