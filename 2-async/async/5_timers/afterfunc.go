@@ -14,15 +14,13 @@ func main() {
 	//
 	//fmt.Scanln()
 	//timer.Stop()
-	
 
-
-	timer := time.NewTimer(2*time.Second)
+	timer := time.NewTimer(2 * time.Second)
 	t := <-timer.C
 
 	fmt.Println("Timer", t)
 
-	t = <-time.After(1*time.Second)
+	t = <-time.After(1 * time.Second)
 
 	fmt.Println("Time after", t)
 

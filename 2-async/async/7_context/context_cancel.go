@@ -21,7 +21,7 @@ func студент(ctx context.Context, workerNum int, out chan<- int) {
 }
 
 func main() {
-	ctx, finish := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
 
 	result := make(chan int, 1)
 
@@ -31,7 +31,7 @@ func main() {
 
 	foundBy := <-result
 	fmt.Println("вопрос был задан студентом", foundBy)
-	finish()
+	cancel()
 
 	time.Sleep(time.Second)
 }

@@ -12,13 +12,13 @@ const goroutinesNum = 3
 func startWorker(workerNum int, in <-chan string) {
 	for input := range in {
 		fmt.Printf(formatWork(workerNum, input))
-		runtime.Gosched() // попробуйте закомментировать
+		// runtime.Gosched() // попробуйте закомментировать
 	}
 	printFinishWork(workerNum)
 }
 
 func main() {
-	runtime.GOMAXPROCS(0)               // попробуйте с 0 (все доступные) и 1
+	runtime.GOMAXPROCS(0)            // попробуйте с 0 (все доступные) и 1
 	worketInput := make(chan string) // попробуйте увеличить размер канала
 	for i := 0; i < goroutinesNum; i++ {
 		go startWorker(i, worketInput)

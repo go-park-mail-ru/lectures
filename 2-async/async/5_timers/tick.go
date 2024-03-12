@@ -23,7 +23,7 @@ func main() {
 
 	// не может быть остановлен и собран сборщиком мусора
 	// используйте если должен работать вечено
-	c := time.Tick(time.Second)
+	c := time.Tick(1 * time.Millisecond)
 	i = 0
 	for tickTime := range c {
 		i++

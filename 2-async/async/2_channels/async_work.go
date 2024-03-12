@@ -35,13 +35,15 @@ func getPage() {
 	resultCh := getComments()
 	userCh := getUser()
 
+	start := time.Now()
+
 	time.Sleep(1 * time.Second)
 	fmt.Println("get related articles")
 
 	commentsData := <-resultCh // через 2 сек
 	userData := <-userCh       // через 1 сек
 
-	fmt.Println("main goroutine:", commentsData, ",", userData)
+	fmt.Println("main goroutine:", commentsData, ",", userData, ", ", time.Since(start).Seconds())
 }
 
 func main() {

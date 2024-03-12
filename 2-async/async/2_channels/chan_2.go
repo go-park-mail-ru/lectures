@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"runtime"
+	"time"
 )
 
 func main() {
-	runtime.GOMAXPROCS(1)
-
-	in := make(chan int, 1)
+	in := make(chan int, 10)
 
 	go func(out chan<- int) {
 		for i := 0; i <= 10; i++ {
@@ -17,15 +15,16 @@ func main() {
 
 			fmt.Println("after", i)
 		}
-		// out <- 12
 		close(out)
+
 		fmt.Println("generator finish")
 	}(in)
 
-	for i := range in {
-		///
-		fmt.Println("\tget", i)
+	time.Sleep(2 * time.Second)
+
+	for data := range in {
+		fmt.Println("Read from the channel", data)
 	}
 
-	// fmt.Scanln()
+	fmt.Scanln()
 }
