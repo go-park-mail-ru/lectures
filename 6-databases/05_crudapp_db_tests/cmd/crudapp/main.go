@@ -12,11 +12,11 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/handlers"
-	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/items"
-	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/middleware"
-	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/session"
-	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/user"
+	"github.com/go-park-mail-ru/lectures/6-databases/05_crudapp_db_tests/pkg/handlers"
+	"github.com/go-park-mail-ru/lectures/6-databases/05_crudapp_db_tests/pkg/items"
+	"github.com/go-park-mail-ru/lectures/6-databases/05_crudapp_db_tests/pkg/middleware"
+	"github.com/go-park-mail-ru/lectures/6-databases/05_crudapp_db_tests/pkg/session"
+	"github.com/go-park-mail-ru/lectures/6-databases/05_crudapp_db_tests/pkg/user"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"

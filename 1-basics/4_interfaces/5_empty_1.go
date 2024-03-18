@@ -25,6 +25,6 @@ func (w *Wallet) String() string {
 
 func main() {
 	myWallet := &Wallet{Cash: 100}
-	fmt.Printf("Raw payment : %#v\n", myWallet)
+	// fmt.Printf("Raw payment : %#v\n", myWallet)
 	fmt.Printf("Способ оплаты: %s\n", myWallet)
 }

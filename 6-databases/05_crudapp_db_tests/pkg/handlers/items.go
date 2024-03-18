@@ -6,14 +6,15 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/items"
-	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/session"
+	"github.com/go-park-mail-ru/lectures/6-databases/05_crudapp_db_tests/pkg/items"
+	"github.com/go-park-mail-ru/lectures/6-databases/05_crudapp_db_tests/pkg/session"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
 	"go.uber.org/zap"
 )
 
+// mockgen -source=items.go -destination=items_mock.go -package=handlers ItemRepositoryInterface
 type ItemRepositoryInterface interface {
 	GetAll() ([]*items.Item, error)
 	GetByID(int64) (*items.Item, error)

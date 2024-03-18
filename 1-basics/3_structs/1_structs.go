@@ -21,13 +21,12 @@ func main() {
 		Id:   1,
 		Name: "rvasily",
 		Person: Person{
-			id: 2,
+			id:      2,
 			Name:    "Василий",
 			Address: "Москва",
 		},
 	}
 	fmt.Printf("%#v\n", acc)
-
 
 	// короткое объявление структуры
 	//acc.Person = Person{2, "Romanov Vasily", "Moscow"}

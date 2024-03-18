@@ -19,3 +19,8 @@ func Check(strings []string) error {
 
 	return nil
 }
+
+func tmp() {
+	println(123)
+
+}

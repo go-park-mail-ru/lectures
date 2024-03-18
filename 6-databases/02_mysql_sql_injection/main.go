@@ -27,7 +27,7 @@ var loginFormTmpl = `
 func main() {
 
 	// основные настройки к базе
-	dsn := "root:love@tcp(localhost:3306)/inj?"
+	dsn := "root:love@tcp(localhost:3306)/golang?"
 	// указываем кодировку
 	dsn += "&charset=utf8"
 	// отказываемся от prapared statements
@@ -60,6 +60,8 @@ func main() {
 		// параметры не экранированы должным образом
 		// мы подставляем в запрос параметр как есть
 		query := fmt.Sprintf("SELECT id, login FROM users WHERE login = '%s' LIMIT 1", inputLogin)
+		// query := fmt.Sprintf("SELECT id, login FROM users WHERE (login = '%s' AND login <> 'admin') LIMIT 1", inputLogin)
+		// SELECT id, login FROM users WHERE login = ''; --
 
 		body += fmt.Sprintln("Sprint query:", query)
 
@@ -91,7 +93,7 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-//PanicOnErr panics on error
+// PanicOnErr panics on error
 func PanicOnErr(err error) {
 	if err != nil {
 		panic(err)

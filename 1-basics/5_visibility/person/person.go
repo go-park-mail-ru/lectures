@@ -25,3 +25,8 @@ func (p Person) UpdateSecret(secret string) {
 	fmt.Println(private)
 	p.secret = secret
 }
+
+func (p Person) getSecret(secret string) {
+	fmt.Println(private)
+	p.secret = secret
+}

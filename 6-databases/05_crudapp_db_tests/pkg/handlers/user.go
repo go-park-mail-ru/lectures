@@ -4,8 +4,8 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/session"
-	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_db_tests/pkg/user"
+	"github.com/go-park-mail-ru/lectures/6-databases/05_crudapp_db_tests/pkg/session"
+	"github.com/go-park-mail-ru/lectures/6-databases/05_crudapp_db_tests/pkg/user"
 
 	"go.uber.org/zap"
 )

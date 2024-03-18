@@ -1,4 +1,4 @@
-package main 
+package main
 
 type UserID int
 
@@ -11,6 +11,7 @@ func main() {
 	// myID := idx
 
 	myID := UserID(idx)
-	
+	var someUserID int
+
 	println(uid, myID)
 }

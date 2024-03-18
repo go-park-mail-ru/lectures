@@ -153,7 +153,7 @@ func main() {
 
 	handlers := &Handler{
 		Items: itemsRepo,
-		Tmpl:  template.Must(template.ParseGlob("../crud_templates/*")),
+		Tmpl:  template.Must(template.ParseGlob("./templates/*")),
 	}
 
 	// в целям упрощения примера пропущена авторизация и csrf

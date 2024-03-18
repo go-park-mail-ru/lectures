@@ -1,46 +1,43 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type Item struct {
-	Id          int `sql:"AUTO_INCREMENT" gorm:"primary_key"`
+	Id          int
 	Title       string
 	Description string
-	Updated     string `sql:"null"`
-}
-
-func (i *Item) TableName() string {
-	return "items"
-}
-
-func (i *Item) BeforeSave() (err error) {
-	fmt.Println("trigger on before save")
-	return
+	Updated     sql.NullString
 }
 
 type Handler struct {
-	DB   *gorm.DB
+	DB   *sql.DB
 	Tmpl *template.Template
 }
 
 func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 
 	items := []*Item{}
-
-	db := h.DB.Find(&items)
-	err := db.Error
-
+	// Не надо так: SELECT * FROM items
+	rows, err := h.DB.QueryContext(r.Context(), "SELECT id, title, updated FROM items")
 	__err_panic(err)
+	for rows.Next() {
+		post := &Item{}
+		err = rows.Scan(&post.Id, &post.Title, &post.Updated)
+		__err_panic(err)
+		items = append(items, post)
+	}
+	// надо закрывать соединение, иначе будет течь
+	rows.Close()
 
 	err = h.Tmpl.ExecuteTemplate(w, "index.html", struct {
 		Items []*Item
@@ -62,17 +59,20 @@ func (h *Handler) AddForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
-
-	newItem := &Item{
-		Title:       r.FormValue("title"),
-		Description: r.FormValue("description"),
-	}
-	db := h.DB.Create(&newItem)
-	err := db.Error
+	// в целям упрощения примера пропущена валидация
+	result, err := h.DB.Exec(
+		"INSERT INTO items (`title`, `description`) VALUES (?, ?)",
+		r.FormValue("title"),
+		r.FormValue("description"),
+	)
 	__err_panic(err)
-	affected := db.RowsAffected
 
-	fmt.Println("Insert - RowsAffected", affected, "LastInsertId: ", newItem.Id)
+	affected, err := result.RowsAffected()
+	__err_panic(err)
+	lastID, err := result.LastInsertId()
+	__err_panic(err)
+
+	fmt.Println("Insert - RowsAffected", affected, "LastInsertId: ", lastID)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
@@ -83,14 +83,11 @@ func (h *Handler) Edit(w http.ResponseWriter, r *http.Request) {
 	__err_panic(err)
 
 	post := &Item{}
+	// QueryRow сам закрывает коннект
+	row := h.DB.QueryRow("SELECT id, title, updated, description FROM items WHERE id = ?", id)
 
-	db := h.DB.Find(post, id)
-	err = db.Error
-	if err == gorm.ErrRecordNotFound {
-		fmt.Println("Record not found", id)
-	} else {
-		__err_panic(err)
-	}
+	err = row.Scan(&post.Id, &post.Title, &post.Updated, &post.Description)
+	__err_panic(err)
 
 	err = h.Tmpl.ExecuteTemplate(w, "edit.html", post)
 	if err != nil {
@@ -104,17 +101,15 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 	__err_panic(err)
 
-	post := &Item{}
-	h.DB.Find(post, id)
-
-	post.Title = r.FormValue("title")
-	post.Description = r.FormValue("description")
-	post.Updated = "rvasily"
-
-	db := h.DB.Save(post)
-	err = db.Error
+	// в целям упрощения примера пропущена валидация
+	result, err := h.DB.Exec(
+		"UPDATE items SET `title` = ?, `description` = ?, `updated` = ? WHERE id = ?",
+		r.FormValue("title"), r.FormValue("description"), "user", id,
+	)
 	__err_panic(err)
-	affected := db.RowsAffected
+
+	affected, err := result.RowsAffected()
+	__err_panic(err)
 
 	fmt.Println("Update - RowsAffected", affected)
 
@@ -126,10 +121,14 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 	__err_panic(err)
 
-	db := h.DB.Delete(&Item{Id: id})
-	err = db.Error
+	result, err := h.DB.Exec(
+		"DELETE FROM items WHERE id = ?",
+		id,
+	)
 	__err_panic(err)
-	affected := db.RowsAffected
+
+	affected, err := result.RowsAffected()
+	__err_panic(err)
 
 	fmt.Println("Delete - RowsAffected", affected)
 
@@ -141,21 +140,25 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	// основные настройки к базе
-	dsn := "root:1234@tcp(localhost:3306)/tech?"
+	dsn := "root:love@tcp(localhost:3306)/golang?"
 	// указываем кодировку
 	dsn += "&charset=utf8"
 	// отказываемся от prapared statements
 	// параметры подставляются сразу
 	dsn += "&interpolateParams=true"
 
-	db, err := gorm.Open("mysql", dsn)
-	db.DB()
-	db.DB().Ping()
-	__err_panic(err)
+	db, err := sql.Open("mysql", dsn)
+
+	db.SetMaxOpenConns(10)
+
+	err = db.Ping() // вот тут будет первое подключение к базе
+	if err != nil {
+		panic(err)
+	}
 
 	handlers := &Handler{
 		DB:   db,
-		Tmpl: template.Must(template.ParseGlob("../gorm_templates/*")),
+		Tmpl: template.Must(template.ParseGlob("templates/*")),
 	}
 
 	// в целям упрощения примера пропущена авторизация и csrf
@@ -169,7 +172,7 @@ func main() {
 	r.HandleFunc("/items/{id}", handlers.Delete).Methods("DELETE")
 
 	fmt.Println("starting server at :8080")
-	http.ListenAndServe(":8080", r)
+	fmt.Println(http.ListenAndServe(":8080", r))
 }
 
 // не используйте такой код в прошакшене

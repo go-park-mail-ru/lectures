@@ -8,7 +8,7 @@ func singleIn(in int) int {
 }
 
 // много параметров
-func multIn(a, b int, c int) int {
+func multIn(a, b, c int) int {
 	return a + b + c
 }
 
@@ -49,10 +49,7 @@ func sum(in ...int) (result int) {
 }
 
 func main() {
-	// fmt.Println(multipleNamedReturn(false))
-	// return
-
 	nums := []int{1, 2, 3, 4}
-	fmt.Println(nums, sum(nums...))
+	fmt.Println(nums, sum(1, 2, 3, 4, 5))
 	return
 }

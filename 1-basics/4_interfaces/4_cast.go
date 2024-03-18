@@ -57,11 +57,15 @@ type Payer interface {
 	Pay(int) error
 }
 
+type Ringer interface {
+	Ring(int) error
+}
+
 // --------------
 
 func Buy(p Payer) {
 	switch p.(type) {
-	case *Wallet:
+	case Ringer:
 		fmt.Println("Оплата наличными?")
 	case *Card:
 		plasticCard, ok := p.(*Card)

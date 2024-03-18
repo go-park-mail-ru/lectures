@@ -1,5 +1,6 @@
 version: '3'
 
+# docker-compose up
 # docker rm $(docker ps -a -q) && docker volume prune -f
 
 services:
@@ -14,7 +15,9 @@ services:
       - './_postgres/:/docker-entrypoint-initdb.d/'
 
   mysql:
-    image: mysql:8.0.17
+    # platform: linux/x86_64 # (optional) needed for mac m1/m2 arm processors
+    # image: mysql:8.0.17
+    image: mariadb:latest # also can be used instead mysql with mac m1/m2
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: "love"

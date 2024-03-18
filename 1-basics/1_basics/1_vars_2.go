@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
+var (
+	tmp = 123
+)
+
 func main() {
 	// int - платформозависимый тип, 32/64
 	var i int = 10
