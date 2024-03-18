@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/go-park-mail-ru/lectures/6-databases/crudapp_mongo/pkg/items"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/golang/mock/gomock"
 	"go.uber.org/zap"
@@ -33,7 +34,7 @@ func TestItemsHandlerList(t *testing.T) {
 	// Finish сравнит последовательсноть вызовов и выведет ошибку если последовательность другая
 	defer ctrl.Finish()
 
-	st := NewMockItemRepository(ctrl)
+	st := NewMockItemRepositoryInterface(ctrl)
 	service := &ItemsHandler{
 		ItemsRepo: st,
 		Logger:    zap.NewNop().Sugar(), // не пишет логи
@@ -41,7 +42,7 @@ func TestItemsHandlerList(t *testing.T) {
 	}
 
 	resultItems := []*items.Item{
-		{ID: 1, Title: "database/sql"},
+		{ID: primitive.NewObjectID(), Title: "database/sql"},
 	}
 
 	// тут мы записываем последовтаельность вызовов и результат
