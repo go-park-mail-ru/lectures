@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
 	// значение по умолчанию
@@ -40,6 +38,7 @@ func main() {
 	// присваивание в существующие переменные
 	weight, height = 11, 21
 	weight, height = height, weight
+
 
 	// короткое присваивание
 	// хотя-бы одна переменная должна быть новой!

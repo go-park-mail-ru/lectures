@@ -41,6 +41,8 @@ func Buy(in interface{}) {
 
 	err := p.Pay(6)
 
+
+
 	if err != nil {
 		fmt.Printf("Ошибка при оплате %T: %v\n\n", p, err)
 		return

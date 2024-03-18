@@ -42,7 +42,7 @@ func (sl *MySlice) Count() int {
 }
 
 func main() {
-	pers := Person{Id: 1, Name: "Vasily"}
+	pers := Person{1, "Vasily"}
 	// pers := new(Person)
 	pers.SetName("Vasily Romanov")
 	// (&pers).SetName("Vasily Romanov")

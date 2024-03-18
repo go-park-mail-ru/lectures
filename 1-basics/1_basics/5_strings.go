@@ -41,7 +41,7 @@ func main() {
 
 	fmt.Println(rawBinary, someChinese)
 
-	helloWorld = "Привет Мир"
+	helloWorld = "Привет Мир 👋ё"
 	// конкатенация строк
 	andGoodMorning := helloWorld + " и доброе утро!"
 
@@ -55,7 +55,7 @@ func main() {
 	byteLen := len(helloWorld)                    // 19 байт
 	symbols := utf8.RuneCountInString(helloWorld) // 10 рун
 
-	fmt.Println("len, utf8len: ", byteLen, symbols)
+	fmt.Println(byteLen, symbols)
 
 	// получение подстроки, в байтах, не символах!
 	hello = helloWorld[:12] // Привет, 0-11 байты

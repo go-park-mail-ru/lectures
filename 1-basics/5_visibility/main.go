@@ -3,8 +3,7 @@ package main
 import (
 	"fmt"
 
-	// "github.com/go-park-mail-ru/lectures/1-basics/5_visibility/person"
-	"github.com/go-park-mail-ru/lectures/1-basics/5_visibility/person"
+	prsonModule "github.com/go-park-mail-ru/lectures/1-basics/5_visibility/person"
 )
 
 func init() {
@@ -12,7 +11,6 @@ func init() {
 }
 
 func main() {
-	personOne := 1
-	person.Person{}
-	fmt.Println("I am main", personOne, person.Person{})
+	person := 1
+	fmt.Println("I am main", person, prsonModule.Person{})
 }

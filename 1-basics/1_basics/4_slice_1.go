@@ -30,9 +30,9 @@ func main() {
 	buf = append(buf, 12)    // len=3, cap=4
 
 	// добавление друго слайса
-	otherBuf := []int{0, 0, 0, 2}  // [0,0,0]
+	otherBuf := []int{0,0,0}   // [0,0,0]
 	buf = append(buf, otherBuf...) // len=6, cap=8
-	//buf = append(buf, otherBuf[0], otherBuf[1], otherBuf[2],otherBuf[3])
+	//buf = append(buf, otherBuf[0], otherBuf[1], otherBuf[2])
 
 	fmt.Println(buf, otherBuf)
 

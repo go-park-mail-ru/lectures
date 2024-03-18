@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func tmp() {
+func deferTest() {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println("panic happend SECOND:", err)
@@ -12,15 +12,21 @@ func tmp() {
 
 		fmt.Println("Second defer")
 	}()
-
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("panic happend FIRST:", err)
+			panic("second panic")
+		}
+	}()
 	fmt.Println("Some userful work")
-
-	fmt.Println("Some userful after panic")
+	panic("something bad happend")
+	return
 }
 
 func main() {
-	tmp()
-	fmt.Println("panic heppened")
+	deferTest()
+
+	fmt.Println("kek")
 
 	return
 }

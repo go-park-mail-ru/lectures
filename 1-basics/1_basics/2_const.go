@@ -1,12 +1,14 @@
 package main
 
+import "fmt"
+
 const pi float32 = 3.141
 const (
 	hello = "Привет"
 	e     = 2.718
 )
 const (
-	zero = iota
+	zero = iota + 1
 	_
 	two
 	three // = 3
@@ -25,7 +27,7 @@ const (
 
 func main() {
 	var month int32 = 13
-	// fmt.Println(month + year)
+	fmt.Println(month + year)
 
 	// month + yearTyped (mismatched types int32 and int)
 	// fmt.Println( month + yearTyped )

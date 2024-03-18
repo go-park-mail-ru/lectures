@@ -11,10 +11,6 @@ func TestCheckSuccess(t *testing.T) {
 	}
 }
 
-func TestBlabla(t *testing.T) {
-	t.Error(123)
-}
-
 func TestCheckFail(t *testing.T) {
 	var mixedInput = []string{"1", "5", "3", "2", "4"}
 
