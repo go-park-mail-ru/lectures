@@ -17,8 +17,6 @@ type SessionID struct {
 	ID string
 }
 
-const sessKeyLen = 10
-
 type SessionManager struct {
 	tConn *tarantool.Connection
 }
@@ -67,19 +65,19 @@ func (sm *SessionManager) Check(in *SessionID) (*Session, error) {
 		return nil, fmt.Errorf("cannot cast data: %v", sessionDataSlice)
 	}
 
-	if sessionDataSlice[0] == nil {
+	if sessionDataSlice[1] == nil {
 		return nil, nil
 	}
 
-	sessionData, ok := sessionDataSlice[0].(string)
+	sessionData, ok := sessionDataSlice[1].(string)
 	if !ok {
-		return nil, fmt.Errorf("cannot cast data: %v", sessionDataSlice[0])
+		return nil, fmt.Errorf("cannot cast data: %v", sessionDataSlice[1])
 	}
 
 	sess := &Session{}
 	err = json.Unmarshal([]byte(sessionData), sess)
 	if err != nil {
-		log.Println("cant unpack session data:", err)
+		log.Printf("cant unpack session data(%s): %v\n", sessionData, err)
 		return nil, nil
 	}
 	return sess, nil

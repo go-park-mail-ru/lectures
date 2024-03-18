@@ -16,6 +16,7 @@ var (
 	sessManager *SessionManager
 
 	users = map[string]string{
+		"a.sulaev":       "golang",
 		"dmitrydorofeev": "test",
 		"romanov.vasily": "100500",
 	}

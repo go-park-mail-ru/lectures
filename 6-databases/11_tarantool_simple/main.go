@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	tarantool "github.com/tarantool/go-tarantool"
 )
@@ -13,6 +15,8 @@ import (
 */
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	opts := tarantool.Opts{User: "guest"}
 	conn, err := tarantool.Connect("127.0.0.1:3301", opts)
 
@@ -21,13 +25,13 @@ func main() {
 		return
 	}
 
-	resp, err := conn.Insert("users", []interface{}{1, "Jesus", 2019})
+	resp, err := conn.Insert("users", []interface{}{rand.Int(), fmt.Sprintf("user%d", rand.Int()), 2019})
 	if err != nil {
 		fmt.Println("Error", err)
 		fmt.Println("Code", resp.Code)
 	}
 
-	resp, err = conn.Select("users", "primary", 0, 1, tarantool.IterEq, []interface{}{uint(1)})
+	resp, err = conn.Select("users", "primary", 0, 100, tarantool.IterAll, []interface{}{uint(1)})
 	if err != nil {
 		fmt.Println("Error", err)
 		fmt.Println("Code", resp.Code)

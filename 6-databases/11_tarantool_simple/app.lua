@@ -35,7 +35,7 @@ function new_session(user_data)
         session_id = session_id .. string.char(random_number)
     end
 
-    box.space.sessions:insert{random_string, user_data}
+    box.space.sessions:insert{session_id, user_data}
 
     return session_id
 end
