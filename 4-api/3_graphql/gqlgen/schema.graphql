@@ -15,4 +15,7 @@ type Query {
 
 # go run github.com/99designs/gqlgen init
 # go run github.com/99designs/gqlgen -v
+# go run github.com/99designs/gqlgen generate
 # rm -rf generated.go models_generated gqlgen.yml models_gen.go resolver.go server.go
+
+# go get github.com/99designs/gqlgen@v0.17.38

@@ -6,26 +6,17 @@ package graph
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/go-park-mail-ru/lectures/4-api/3_graphql/gqlgen/graph/model"
 )
 
 // Books is the resolver for the books field.
 func (r *queryResolver) Books(ctx context.Context) ([]*model.Book, error) {
-	return []*model.Book{
-		{ID: "1"},
-	}, nil
+	panic(fmt.Errorf("not implemented: Books - books"))
 }
 
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.
-
-type mutationResolver struct{ *Resolver }

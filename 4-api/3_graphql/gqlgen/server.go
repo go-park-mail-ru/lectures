@@ -10,7 +10,7 @@ import (
 	"github.com/go-park-mail-ru/lectures/4-api/3_graphql/gqlgen/graph"
 )
 
-const defaultPort = "8084"
+const defaultPort = "8080"
 
 func main() {
 	port := os.Getenv("PORT")
