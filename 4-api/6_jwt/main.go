@@ -9,7 +9,7 @@ import (
 
 var SECRET = []byte("myawesomesecret")
 
-// http://127.0.0.1:8080/login?username=rvasily
+// http://127.0.0.1:8075/login?username=rvasily
 
 func main() {
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
@@ -62,5 +62,5 @@ func main() {
 		fmt.Println(err)
 	})
 
-	http.ListenAndServe(":8081", nil)
+	http.ListenAndServe(":8075", nil)
 }

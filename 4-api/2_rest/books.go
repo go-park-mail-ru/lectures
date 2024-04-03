@@ -8,7 +8,7 @@ import (
 type Book struct {
 	ID    uint   `json:"id"`
 	Title string `json:"title"`
-	Price uint   `json:"price"`
+	Price uint   `json:"price,omitempty"`
 }
 
 type BookStore struct {

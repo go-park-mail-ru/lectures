@@ -25,9 +25,9 @@ type Response struct {
 	}
 }
 
-var AUTH_URL = `https://oauth.vk.com/authorize?client_id=51569264&redirect_uri=http://localhost:8082/user/login_oauth&response_type=code&scope=email`
+var AUTH_URL = `https://oauth.vk.com/authorize?client_id=51569264&redirect_uri=http://localhost:8075/user/login_oauth&response_type=code&scope=email`
 
-// https://oauth.vk.com/authorize?client_id=7065390&redirect_uri=http://localhost:8080/&response_type=code&scope=email
+// https://oauth.vk.com/authorize?client_id=7065390&redirect_uri=http://localhost:8075/&response_type=code&scope=email
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +37,7 @@ func main() {
 		conf := oauth2.Config{
 			ClientID:     APP_ID,
 			ClientSecret: APP_KEY,
-			RedirectURL:  "http://localhost:8082/user/login_oauth", // ссылка, на которую мы будем перенаправлены после авторизации
+			RedirectURL:  "http://localhost:8075/user/login_oauth", // ссылка, на которую мы будем перенаправлены после авторизации
 			Endpoint:     vk.Endpoint,
 		}
 
@@ -87,5 +87,8 @@ func main() {
 		`))
 	})
 
-	http.ListenAndServe(":8075", nil)
+	err := http.ListenAndServe(":8075", nil)
+	if err != nil {
+		return
+	}
 }

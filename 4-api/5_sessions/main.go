@@ -40,7 +40,7 @@ func NewMyHandler() *MyHandler {
 	}
 }
 
-// http://127.0.0.1:8081/login?login=rvasily&password=love
+// http://127.0.0.1:8888/login?login=rvasily&password=love
 
 func (api *MyHandler) Login(w http.ResponseWriter, r *http.Request) {
 
@@ -111,5 +111,5 @@ func main() {
 	r.HandleFunc("/login", api.Login)
 	r.HandleFunc("/logout", api.Logout)
 
-	http.ListenAndServe(":8081", r)
+	http.ListenAndServe(":8888", r)
 }

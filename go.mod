@@ -6,7 +6,6 @@ require (
 	github.com/99designs/gqlgen v0.17.38
 	github.com/DATA-DOG/go-sqlmock v1.3.3
 	github.com/HdrHistogram/hdrhistogram-go v1.1.2 // indirect
-	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
 	github.com/bradfitz/gomemcache v0.0.0-20220106215444-fb4bf637b56d
 	github.com/buaazp/fasthttprouter v0.1.1
@@ -22,7 +21,6 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/schema v1.2.0
 	github.com/gorilla/websocket v1.5.0
-	github.com/graphql-go/graphql v0.8.0
 	github.com/hashicorp/consul/api v1.12.0
 	github.com/hashicorp/vault/api v1.7.2
 	github.com/icrowley/fake v0.0.0-20220625154756-3c7517006344
@@ -45,8 +43,6 @@ require (
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/viper v1.12.0
 	github.com/streadway/amqp v1.0.0
-	github.com/swaggo/http-swagger v1.3.3
-	github.com/swaggo/swag v1.8.5
 	github.com/tarantool/go-tarantool v1.8.0
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/uber/jaeger-lib v2.4.1+incompatible
@@ -56,7 +52,6 @@ require (
 	go.uber.org/zap v1.17.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	golang.org/x/net v0.10.0
-	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
 	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.30.0
 	gopkg.in/alexcesaro/statsd.v2 v2.0.0
