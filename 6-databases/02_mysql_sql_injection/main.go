@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -79,7 +80,7 @@ func main() {
 		// Мы используем плейсхолдеры, там параметры будет экранирован должным образом
 		row = db.QueryRow("SELECT id, login FROM users WHERE login = ? LIMIT 1", inputLogin)
 		err = row.Scan(&id, &login)
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			body += fmt.Sprintln("Placeholders case: NOT FOUND")
 		} else {
 			PanicOnErr(err)

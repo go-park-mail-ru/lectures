@@ -1,11 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"time"
 
-	tarantool "github.com/tarantool/go-tarantool"
+	"github.com/tarantool/go-tarantool/v2"
 )
 
 /*
@@ -15,10 +16,13 @@ import (
 */
 
 func main() {
+	ctx := context.Background()
+
 	rand.Seed(time.Now().UnixNano())
 
-	opts := tarantool.Opts{User: "guest"}
-	conn, err := tarantool.Connect("127.0.0.1:3301", opts)
+	dialer := tarantool.NetDialer{Address: "127.0.0.1:3301", User: "guest"}
+
+	conn, err := tarantool.Connect(ctx, dialer, tarantool.Opts{})
 
 	if err != nil {
 		fmt.Println("baa: Connection refused:", err)
@@ -28,27 +32,24 @@ func main() {
 	resp, err := conn.Insert("users", []interface{}{rand.Int(), fmt.Sprintf("user%d", rand.Int()), 2019})
 	if err != nil {
 		fmt.Println("Error", err)
-		fmt.Println("Code", resp.Code)
 	}
 
 	resp, err = conn.Select("users", "primary", 0, 100, tarantool.IterAll, []interface{}{uint(1)})
 	if err != nil {
 		fmt.Println("Error", err)
-		fmt.Println("Code", resp.Code)
 		return
 	}
 
-	for _, item := range resp.Data {
+	for _, item := range resp {
 		fmt.Println(item)
 	}
 
 	resp, err = conn.Eval("return test()", []interface{}{})
 	if err != nil {
 		fmt.Println("Error", err)
-		fmt.Println("Code", resp.Code)
 		return
 	}
 
-	fmt.Println(resp.Data)
+	fmt.Println(resp)
 
 }

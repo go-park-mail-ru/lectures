@@ -3,10 +3,10 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"reflect"
 	"testing"
 
 	sqlmock "github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/require"
 )
 
 // go test -coverprofile=cover.out && go tool cover -html=cover.out -o cover.html
@@ -47,10 +47,8 @@ func TestSelectByID(t *testing.T) {
 		t.Errorf("there were unfulfilled expectations: %s", err)
 		return
 	}
-	if !reflect.DeepEqual(item, expect[0]) {
-		t.Errorf("results not match, want %v, have %v", expect[0], item)
-		return
-	}
+
+	require.Equalf(t, item, expect[0], "results not match, want %v, have %v", expect[0], item)
 
 	// query error
 	mock.
