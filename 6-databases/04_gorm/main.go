@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -19,11 +20,11 @@ type Item struct {
 	Updated     string `sql:"null"`
 }
 
-func (i *Item) TableName() string {
+func (Item) TableName() string {
 	return "items"
 }
 
-func (i *Item) BeforeSave() (err error) {
+func (Item) BeforeSave() (err error) {
 	fmt.Println("trigger on before save")
 	return
 }
@@ -88,7 +89,7 @@ func (h *Handler) Edit(w http.ResponseWriter, r *http.Request) {
 
 	db := h.DB.Find(post)
 	err = db.Error
-	if err == gorm.ErrRecordNotFound {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		fmt.Println("Record not found", id)
 	} else {
 		__err_panic(err)

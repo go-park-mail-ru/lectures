@@ -1,5 +1,8 @@
 #!/usr/bin/env tarantool
 
+-- Запустить с помощью ./app.lua при заранее установленным tarantool на устрйотсво
+-- Зайти с помощью tarantoolctl connect 127.0.0.1:3301
+
 -- Настроить базу данных
 box.cfg {
     listen = 3301
@@ -7,15 +10,21 @@ box.cfg {
 
 -- При поднятии БД создаем спейсы и индексы
 box.once('init', function()
-    box.schema.space.create('users')
-    box.space.users:create_index('primary',
-        { type = 'TREE', parts = {1, 'unsigned'}})
+	s = box.schema.space.create('users')
+	s:format({{name = 'id', type = 'unsigned'},{name = 'name', type = 'string'},{name = 'age', type = 'unsigned'}})
+	s:create_index('primary', {type = 'hash', parts = {'id'}})
+
 
     box.schema.space.create('sessions')
     box.space.sessions:create_index('primary',
         { type = 'HASH', parts = {1, 'string'}})
 
      print('Hello, world!')
+end)
+
+-- Даем доступ для юзера guest для подключения по guest пользователю
+box.once('access:v1', function()
+    box.schema.user.grant('guest', 'read,write,execute', 'universe')
 end)
 
 -- Можем определять свои функции и вызывать их из кода

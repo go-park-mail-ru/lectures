@@ -41,13 +41,14 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.12.1
-	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.14.0
 	github.com/streadway/amqp v1.0.0
+	github.com/stretchr/testify v1.8.1
 	github.com/swaggo/http-swagger v1.3.3
 	github.com/swaggo/swag v1.8.5
-	github.com/tarantool/go-tarantool v1.8.0
+	github.com/tarantool/go-tarantool v1.12.2
+	github.com/tarantool/go-tarantool/v2 v2.1.0
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/uber/jaeger-lib v2.4.1+incompatible
 	github.com/valyala/fasthttp v1.45.0

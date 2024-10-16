@@ -1,3 +1,10 @@
 .DS_Store
 .idea
 .vscode
+
+# Tarantool output files
+*.xlog
+*.snap
+
+# Test data files
+6-databases/10_rabbit/images/*.jpg
