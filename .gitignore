@@ -8,3 +8,10 @@
 
 # Test data files
 6-databases/10_rabbit/images/*.jpg
+
+
+# Ignore binary files
+*.exe
+
+# Ignore tmp output files
+*.out
