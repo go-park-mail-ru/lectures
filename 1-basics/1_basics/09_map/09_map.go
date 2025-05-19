@@ -17,6 +17,27 @@ func main() {
 
 	fmt.Printf("%d %+v\n", mapLength, profile)
 
+	/*
+
+			1. Ключ всегда comparable
+			= !=
+
+			2.
+			sha1, crc32, crc64
+
+			Fh = func (toHash Comparable, d int)  int
+
+			Vasya -> Fh(Vasya) -> 10
+			Kolya ->  Fh(Kolya) -> 10
+
+			-----------&----- 15 адресов
+					   V
+					   K
+			O(1)
+
+		Может быть не конкурентно
+	*/
+
 	// если ключа нет - вернёт значение по умолчанию для типа
 	mName := user["middleName"]
 	fmt.Println("mName:", mName)
