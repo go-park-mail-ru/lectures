@@ -7,24 +7,29 @@ import (
 )
 
 const (
-	goroutinesNum = 3
+	goroutinesNum  = 3
+	badGorutineNum = 2
 )
 
-func scanAndPrintInt() error {
-	var i int
-	_, err := fmt.Scanf("%d", &i)
-	if err != nil {
-		return err
+func printGorutineNum(num int) error {
+	waitTime := time.Duration(10*(num+1)) * time.Millisecond
+	fmt.Println(num, "gorutine wil work after", waitTime)
+
+	if num == badGorutineNum {
+		fmt.Println("error found in gorutine", num)
+		return fmt.Errorf("bad gorutine number %d", num)
 	}
 
-	fmt.Println(i)
+	fmt.Println("goroutine number", num)
 	return nil
 }
 
 func main() {
-	eg := &errgroup.Group{} // Инициализируем группу
+	eg := errgroup.Group{} // Инициализируем группу
 	for i := 0; i < goroutinesNum; i++ {
-		eg.Go(scanAndPrintInt)
+		eg.Go(func() error {
+			return printGorutineNum(i + 1)
+		})
 	}
 	time.Sleep(time.Millisecond)
 	err := eg.Wait()
