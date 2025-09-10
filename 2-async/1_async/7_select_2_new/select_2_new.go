@@ -27,14 +27,12 @@ func main() {
 			if !ok {
 				fmt.Println("ch1 closed")
 				ch1 = nil
-				break
 			}
 			fmt.Println("chan1 val", v1)
 		case v2, ok := <-ch2:
 			if !ok {
 				fmt.Println("ch2 closed")
 				ch2 = nil
-				break
 			}
 			fmt.Println("chan2 val", v2)
 		}

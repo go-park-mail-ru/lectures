@@ -50,5 +50,5 @@ func main() {
 	}
 	close(workerInput) // попробуйте закомментировать
 
-	time.Sleep(time.Millisecond)
+	time.Sleep(time.Second)
 }

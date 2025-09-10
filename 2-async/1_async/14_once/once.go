@@ -9,6 +9,10 @@ func Init() {
 	fmt.Println("Init once")
 }
 
+func init() {
+	fmt.Println("Init at start of program")
+}
+
 func main() {
 	const routinesNum = 10
 
