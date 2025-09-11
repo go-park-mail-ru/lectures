@@ -2,19 +2,17 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
-const (
-	iterationsNum = 7
-	goroutinesNum = 7
-)
+const goroutinesNum = 7
 
 func main() {
-	// memory i[ 7 ]
 	for i := 0; i < goroutinesNum; i++ {
-		go func(i int) {
+		go func() { // А если go < 1.22?
 			fmt.Println(i)
-		}(i)
+		}()
 	}
-	fmt.Scanln()
+
+	time.Sleep(time.Second)
 }

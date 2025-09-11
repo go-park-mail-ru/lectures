@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-	"runtime"
 	"strings"
-	"sync"
+	"time"
 )
 
 const (
@@ -12,24 +11,20 @@ const (
 	goroutinesNum = 6
 )
 
-func doWork(wg *sync.WaitGroup, th int) {
-	defer wg.Done()
+func doWork(th int) {
 	for j := 0; j < iterationsNum; j++ {
 		fmt.Printf(formatWork(th, j))
-		runtime.Gosched()
+		//runtime.Gosched()
 	}
 }
 
 func main() {
-	wg := &sync.WaitGroup{}
-	runtime.GOMAXPROCS(1)
-	wg.Add(goroutinesNum)
+	//runtime.GOMAXPROCS(1)
 	for i := 0; i < goroutinesNum; i++ {
-		go doWork(wg, i)
+		go doWork(i)
 	}
 
-	wg.Wait()
-
+	time.Sleep(time.Second)
 }
 
 func formatWork(in, j int) string {
