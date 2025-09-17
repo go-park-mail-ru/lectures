@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -26,15 +25,15 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 
 func uploadPage(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(5 * 1024 * 1025)
-	file, handler, err := r.FormFile("my_file")
+	file, header, err := r.FormFile("my_file")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer file.Close()
 
-	fmt.Fprintf(w, "handler.Filename %v\n", handler.Filename)
-	fmt.Fprintf(w, "handler.Header %#v\n", handler.Header)
+	fmt.Fprintf(w, "header.Filename %v\n", header.Filename)
+	fmt.Fprintf(w, "header.Header %#v\n", header.Header)
 
 	hasher := md5.New()
 	io.Copy(hasher, file)
@@ -53,7 +52,7 @@ curl -v -X POST -H "Content-Type: application/json" -d '{"id": 2, "user": "rvasi
 
 func uploadRawBody(w http.ResponseWriter, r *http.Request) {
 
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	defer r.Body.Close()
 
 	p := &Params{}

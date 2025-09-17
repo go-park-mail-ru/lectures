@@ -1,7 +1,7 @@
 Конечно же документация:
 * https://golang.org/pkg/net/http/
 
-Дополнительные матералы
+Дополнительные материалы
 
 * https://gowebexamples.github.io/ - примеры касательно разработки веба
 * https://golang.org/doc/articles/wiki/
