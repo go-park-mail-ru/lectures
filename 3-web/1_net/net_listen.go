@@ -29,12 +29,12 @@ func handleConnection(conn net.Conn) {
 }
 
 func main() {
-	listner, err := net.Listen("tcp", ":8080")
+	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		panic(err)
 	}
 	for {
-		conn, err := listner.Accept()
+		conn, err := listener.Accept()
 		if err != nil {
 			panic(err)
 		}

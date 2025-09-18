@@ -1,8 +1,7 @@
-package main
+package client
 
 import (
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -51,7 +50,7 @@ func TestGetUser(t *testing.T) {
 		}
 
 		resp := w.Result()
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 
 		bodyStr := string(body)
 		if bodyStr != item.Response {
