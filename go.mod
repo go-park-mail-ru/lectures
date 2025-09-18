@@ -1,6 +1,6 @@
 module github.com/go-park-mail-ru/lectures
 
-go 1.18
+go 1.24
 
 require (
 	github.com/99designs/gqlgen v0.11.1

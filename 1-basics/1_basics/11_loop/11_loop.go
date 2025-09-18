@@ -40,8 +40,12 @@ func main() {
 		fmt.Println("range slice by index", sl[idx])
 	}
 	for idx, val := range sl {
+		val = idx + 1     // не поменяем
+		sl[idx] = idx + 2 // поменяем
 		fmt.Println("range slice by idx-value", idx, val)
 	}
+
+	fmt.Printf("slice by idx-value %v\n", sl)
 
 	// операции по map
 	profile := map[int]string{1: "Vasily", 2: "Romanov"}
@@ -58,10 +62,10 @@ func main() {
 		fmt.Println("range map by val", val)
 	}
 
-	// added in go 1.22
-	// for i := range 10 {
-	// 	println(i)
-	// }
+	//added in go 1.22
+	for i := range 10 {
+		println(i)
+	}
 
 	str := "Привет, Мир!"
 	for pos, char := range str {

@@ -12,6 +12,12 @@ func main() {
 	// сразу с нужной ёмкостью
 	profile := make(map[string]string, 10)
 
+	// nil мапа
+	//var profileEmpty map[string]string
+	//fmt.Println("profileEmpty get ", profileEmpty["key"])
+	//profileEmpty["key"] = "1"  // panic
+	//fmt.Println("profileEmpty set ", profileEmpty["key"])
+
 	// количество элементов
 	mapLength := len(user)
 
