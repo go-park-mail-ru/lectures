@@ -10,21 +10,22 @@ var totalOperations int32 = 0
 var mu = &sync.Mutex{}
 
 func inc() {
-	mu.Lock()
-	defer mu.Unlock()
+	//mu.Lock()
+	//defer mu.Unlock()
 
-	// не атомарная операция
+	// Не атомарная операция
 	totalOperations++
 }
 
 func main() {
-	// runtime.GOMAXPROCS(1)
+	//runtime.GOMAXPROCS(1)
 	for i := 0; i < 1000; i++ {
 		go inc()
 	}
 	time.Sleep(100 * time.Millisecond)
-	// ождается 1000
-	mu.Lock()
+
+	// Ожидается 1000
+	//mu.Lock()
 	fmt.Println("total operation = ", totalOperations)
-	mu.Unlock()
+	//mu.Unlock()
 }

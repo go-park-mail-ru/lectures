@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -18,7 +18,7 @@ func startServer() {
 	})
 
 	http.HandleFunc("/raw_body", func(w http.ResponseWriter, r *http.Request) {
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		defer r.Body.Close() // важный пункт!
 		if err != nil {
 			http.Error(w, err.Error(), 500)
@@ -40,7 +40,7 @@ func runGet() {
 	}
 	defer resp.Body.Close() // важный пункт!
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 
 	fmt.Printf("http.Get body %#v\n\n\n", string(respBody))
 }
@@ -64,7 +64,7 @@ func runGetFullReq() {
 	}
 	defer resp.Body.Close() // важный пункт!
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 
 	fmt.Printf("testGetFullReq resp %#v\n\n\n", string(respBody))
 }
@@ -102,7 +102,7 @@ func runTransportAndPost() {
 	}
 	defer resp.Body.Close() // важный пункт!
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 
 	fmt.Printf("runTransport %#v\n\n\n", string(respBody))
 }

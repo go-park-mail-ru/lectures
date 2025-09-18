@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -72,7 +72,7 @@ func TestGetUsers(t *testing.T) {
 		t.Error("status is not ok")
 	}
 
-	bytes, _ := ioutil.ReadAll(w.Body)
+	bytes, _ := io.ReadAll(w.Body)
 	if strings.Trim(string(bytes), "\n") != expectedJSON {
 		t.Errorf("expected: [%s], got: [%s]", expectedJSON, string(bytes))
 	}
