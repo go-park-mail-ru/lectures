@@ -11,7 +11,7 @@ func main() {
 	buf4 := make([]int, 5)     // len=5, cap=5
 	buf5 := make([]int, 5, 10) // len=5, cap=10
 
-	println(buf0, buf1, buf2, buf3, buf4, buf5)
+	println("buffers ", buf0, buf1, buf2, buf3, buf4, buf5)
 
 	// обращение к элементам
 	someInt := buf2[0]

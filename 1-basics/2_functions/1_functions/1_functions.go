@@ -33,7 +33,6 @@ func multipleNamedReturn(ok bool) (rez int, err error) {
 		err = fmt.Errorf("some error happend")
 		// аналогично return rez, err
 		return 3, fmt.Errorf("some error happend")
-		return
 	}
 	rez = 2
 	return

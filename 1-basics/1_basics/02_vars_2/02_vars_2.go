@@ -22,6 +22,11 @@ func main() {
 
 	fmt.Println(i, autoInt, bigInt, unsignedInt, unsignedBigInt)
 
+	// вывод в других системах счисления
+	fmt.Printf("в 16-ричной: %x\n", unsignedBigInt)
+	fmt.Printf("в двоичной: %b\n", unsignedBigInt)
+	fmt.Printf("в 8-ричной: %o\n", unsignedBigInt)
+
 	// float32, float64
 	var pi float32 = 3.141
 	var e = 2.718
