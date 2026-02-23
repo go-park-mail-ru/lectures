@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/sync/errgroup"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 )
 
 const (
@@ -12,8 +13,7 @@ const (
 )
 
 func printGorutineNum(num int) error {
-	waitTime := time.Duration(10*(num+1)) * time.Millisecond
-	fmt.Println(num, "gorutine wil work after", waitTime)
+	fmt.Println(num, "gorutine will work after")
 
 	if num == badGorutineNum {
 		fmt.Println("error found in gorutine", num)

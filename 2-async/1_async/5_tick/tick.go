@@ -14,6 +14,7 @@ func main() {
 		if i >= 5 {
 			// Надо останавливать, иначе потечет (но с Go 1.23 не надо 🙂)
 			ticker.Stop()
+			//os.Exit(3)
 			break
 		}
 	}
@@ -34,3 +35,5 @@ func main() {
 	}
 
 }
+
+//while true; do echo "Starting program..."; go run tick.go; echo "Program exited with code $?"; sleep 1; done;

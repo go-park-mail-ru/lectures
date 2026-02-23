@@ -25,5 +25,13 @@ func main() {
 		fmt.Println("\tget", i)
 	}
 
+	/*	for {
+		v, ok := <-in
+		if !ok {
+			break
+		}
+		fmt.Println("\tget", v)
+	}*/
+
 	fmt.Scanln()
 }
