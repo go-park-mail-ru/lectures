@@ -14,7 +14,7 @@ func main() {
 	}(result)
 
 	time.Sleep(2 * time.Second)
-	log.Println("some userful work done")
+	log.Println("some useful work done")
 
 	opStatus := <-result
 	log.Println("main goroutine:", opStatus)

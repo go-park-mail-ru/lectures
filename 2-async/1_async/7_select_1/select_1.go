@@ -19,4 +19,5 @@ func main() {
 	default:
 		fmt.Println("default case")
 	}
+	fmt.Println("finish")
 }

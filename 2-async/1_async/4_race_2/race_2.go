@@ -22,3 +22,5 @@ func main() {
 	fmt.Println("counters result", counters)
 	mu.Unlock()
 }
+
+// -race

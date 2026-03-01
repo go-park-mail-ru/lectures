@@ -9,6 +9,7 @@ const goroutinesNum = 7
 
 func main() {
 	for i := 0; i < goroutinesNum; i++ {
+		//i := i
 		go func() { // А если go < 1.22?
 			fmt.Println(i)
 		}()
