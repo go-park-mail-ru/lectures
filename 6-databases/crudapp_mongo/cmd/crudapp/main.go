@@ -50,7 +50,7 @@ func main() {
 	userRepo := user.NewUserRepo()
 
 	mongoClient := getMongo("mongodb://localhost:27017")
-	itemsRepo := items.NewMongoRepository(mongoClient.Database("coursera").Collection("items"))
+	itemsRepo := items.NewMongoRepository(mongoClient.Database("vkbmstu").Collection("items"))
 
 	userHandler := &handlers.UserHandler{
 		Tmpl:     templates,

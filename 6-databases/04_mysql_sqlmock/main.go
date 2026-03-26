@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -12,41 +13,34 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Item struct {
-	Id          int
-	Title       string
-	Description string
-	Updated     sql.NullString
+type ItemCRUD interface {
+	ListAll() ([]*Item, error)
+	SelectByID(int64) (*Item, error)
+	Create(*Item) (int64, error)
+	Update(*Item) (int64, error)
+	Delete(int64) (int64, error)
 }
 
 type Handler struct {
-	DB   *sql.DB
-	Tmpl *template.Template
+	Items ItemCRUD
+	Tmpl  *template.Template
 }
 
 func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
-
-	items := []*Item{}
-	// Не надо так: SELECT * FROM items
-	rows, err := h.DB.QueryContext(r.Context(), "SELECT id, title, updated FROM items")
-	panicOnErr(err)
-	// Надо закрывать соединение, иначе будет течь
-	defer rows.Close()
-
-	for rows.Next() {
-		post := &Item{}
-		err = rows.Scan(&post.Id, &post.Title, &post.Updated)
-		panicOnErr(err)
-		items = append(items, post)
+	items, err := h.Items.ListAll()
+	if err != nil {
+		log.Println("Items.ListAll err:", err)
+		http.Error(w, "db err", 500)
+		return
 	}
-
 	err = h.Tmpl.ExecuteTemplate(w, "index.html", struct {
 		Items []*Item
 	}{
 		Items: items,
 	})
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println("Tmpl.ExecuteTemplate err:", err)
+		http.Error(w, "template expand err", 500)
 		return
 	}
 }
@@ -60,20 +54,18 @@ func (h *Handler) AddForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
-	// В целях упрощения примера пропущена валидация
-	result, err := h.DB.Exec(
-		"INSERT INTO items (`title`, `description`) VALUES (?, ?)",
-		r.FormValue("title"),
-		r.FormValue("description"),
-	)
-	panicOnErr(err)
+	elem := &Item{
+		Title:       r.FormValue("title"),
+		Description: r.FormValue("description"),
+	}
+	lastID, err := h.Items.Create(elem)
+	if err != nil {
+		log.Println("Items.Create err:", err)
+		http.Error(w, "db err", 500)
+		return
+	}
 
-	affected, err := result.RowsAffected()
-	panicOnErr(err)
-	lastID, err := result.LastInsertId()
-	panicOnErr(err)
-
-	fmt.Println("Insert - RowsAffected", affected, "LastInsertId: ", lastID)
+	fmt.Println("LastInsertId: ", lastID)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
@@ -81,15 +73,18 @@ func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) Edit(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
-	panicOnErr(err)
+	if err != nil || id == 0 {
+		log.Println("bad id:", id, err)
+		http.Error(w, "bad request", 400)
+		return
+	}
 
-	post := &Item{}
-
-	row := h.DB.QueryRow("SELECT id, title, updated, description FROM items WHERE id = ?", id)
-
-	// Scan сам закрывает коннект
-	err = row.Scan(&post.Id, &post.Title, &post.Updated, &post.Description)
-	panicOnErr(err)
+	post, err := h.Items.SelectByID(int64(id))
+	if err != nil {
+		log.Println("Items.SelectByID err:", err)
+		http.Error(w, "db err", 500)
+		return
+	}
 
 	err = h.Tmpl.ExecuteTemplate(w, "edit.html", post)
 	if err != nil {
@@ -103,15 +98,17 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 	panicOnErr(err)
 
-	// В целях упрощения примера пропущена валидация
-	result, err := h.DB.Exec(
-		"UPDATE items SET `title` = ?, `description` = ?, `updated` = ? WHERE id = ?",
-		r.FormValue("title"), r.FormValue("description"), "user", id,
-	)
-	panicOnErr(err)
-
-	affected, err := result.RowsAffected()
-	panicOnErr(err)
+	elem := &Item{
+		ID:          int64(id),
+		Title:       r.FormValue("title"),
+		Description: r.FormValue("description"),
+	}
+	affected, err := h.Items.Update(elem)
+	if err != nil {
+		log.Println("Items.Update err:", err)
+		http.Error(w, "db err", 500)
+		return
+	}
 
 	fmt.Println("Update - RowsAffected", affected)
 
@@ -123,16 +120,8 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 	panicOnErr(err)
 
-	result, err := h.DB.Exec(
-		"DELETE FROM items WHERE id = ?",
-		id,
-	)
-	panicOnErr(err)
-
-	affected, err := result.RowsAffected()
-	panicOnErr(err)
-
-	fmt.Println("Delete - RowsAffected", affected)
+	affected, err := h.Items.Delete(int64(id))
+	fmt.Println("Delete - RowsAffected", affected, err)
 
 	w.Header().Set("Content-type", "application/json")
 	resp := `{"affected": ` + strconv.Itoa(int(affected)) + `}`
@@ -140,12 +129,11 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
 	// основные настройки к базе
 	dsn := "root:love@tcp(localhost:3306)/golang?"
 	// указываем кодировку
 	dsn += "&charset=utf8"
-	// отказываемся от prepared statements
+	// отказываемся от prapared statements
 	// параметры подставляются сразу
 	dsn += "&interpolateParams=true"
 
@@ -155,11 +143,17 @@ func main() {
 	db.SetMaxOpenConns(10)
 
 	err = db.Ping() // Тут будет первое подключение к базе
-	panicOnErr(err)
+	if err != nil {
+		panic(err)
+	}
+
+	itemsRepo := &ItemRepository{
+		DB: db,
+	}
 
 	handlers := &Handler{
-		DB:   db,
-		Tmpl: template.Must(template.ParseGlob("templates/*")),
+		Items: itemsRepo,
+		Tmpl:  template.Must(template.ParseGlob("./templates/*")),
 	}
 
 	// В целях упрощения примера пропущена авторизация и csrf
@@ -173,10 +167,10 @@ func main() {
 	r.HandleFunc("/items/{id}", handlers.Delete).Methods("DELETE")
 
 	fmt.Println("starting server at :8080")
-	fmt.Println(http.ListenAndServe(":8080", r))
+	http.ListenAndServe(":8080", r)
 }
 
-// Не используйте такой код в продакшене
+// Не используйте такой код в продакшене.
 // Ошибка должна всегда явно обрабатываться
 func panicOnErr(err error) {
 	if err != nil {
