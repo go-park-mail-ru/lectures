@@ -15,16 +15,3 @@ CREATE TABLE `items` (
 INSERT INTO `items` (`id`, `title`, `description`, `updated`) VALUES
 (1,	'database/sql',	'Рассказать про базы данных',	'rvasily'),
 (2,	'memcache',	'Рассказать про мемкеш с примером использования',	NULL);
-
----- sql injection example
-
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `login` varchar(200) NOT NULL,
-  `name` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO `users` (`id`, `login`, `name`) VALUES
-(1,	'user',	''),
-(2,	'admin',	'');
