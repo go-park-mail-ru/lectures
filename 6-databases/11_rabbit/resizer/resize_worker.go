@@ -99,6 +99,7 @@ func ResizeWorker(tasks <-chan amqp.Delivery) {
 			err := ResizeImage(originalPath, resizedPath, size)
 			if err != nil {
 				fmt.Println("resize failed", err)
+				continue
 			}
 			fmt.Println("resize success")
 			time.Sleep(3 * time.Second)

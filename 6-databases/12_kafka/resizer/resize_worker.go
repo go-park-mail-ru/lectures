@@ -62,6 +62,7 @@ func (c *Consumer) ConsumeClaim(sess sarama.ConsumerGroupSession, claim sarama.C
 			err := ResizeImage(originalPath, resizedPath, size)
 			if err != nil {
 				fmt.Println("resize failed", err)
+				continue
 			}
 			fmt.Println("resize success")
 			time.Sleep(3 * time.Second)
