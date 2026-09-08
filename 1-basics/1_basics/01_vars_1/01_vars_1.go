@@ -2,6 +2,11 @@ package main
 
 import "fmt"
 
+// Запуск кода. Из папки с main.go:
+
+// go run 01_vars_1.go
+// go run .
+
 func main() {
 	// значение по умолчанию
 	var num0 int

@@ -7,6 +7,12 @@ import (
 	"os"
 )
 
+// Собрать бинарник и запустить его.
+
+// go build
+// go build -o uniq
+// ./uniq input.txt
+
 func uniq(input io.Reader, output io.Writer) error {
 	in := bufio.NewScanner(input)
 	var prev string
