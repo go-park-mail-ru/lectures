@@ -55,4 +55,9 @@ func main() {
 	Buy(myWallet)
 	Buy([]int{1, 2, 3})
 	Buy(3.14)
+
+	// var w *Wallet = nil
+	// var p Payer = w
+	// fmt.Println(p == nil) // false: itab уже заполнен типом *Wallet
+	// p.Pay(10)
 }
