@@ -49,8 +49,8 @@ func main() {
 	fmt.Println("mName:", mName)
 
 	// проверка на существование ключа
-	mName, mNameExist := user["middleName"]
-	fmt.Println("mName:", mName, "mNameExist:", mNameExist)
+	mName, ok := user["middleName"]
+	fmt.Println("mName:", mName, "mNameExist:", ok)
 
 	// пустая переменная - только проверяем что ключ есть
 	_, mNameExist2 := user["middleName"]

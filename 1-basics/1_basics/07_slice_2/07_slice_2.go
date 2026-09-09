@@ -2,11 +2,16 @@ package main
 
 import "fmt"
 
+func mem(name string, s []int) {
+	fmt.Printf("%-8s ptr=%p  len=%d cap=%d  %v\n", name, s, len(s), cap(s), s)
+}
+
 func main() {
 	buf := []int{1, 2, 3, 4, 5}
 	fmt.Println(buf)
 
 	/*
+		 idx:     0  1  2  3  4
 		 buf:    [1, 2, 3, 4, 5]   ← базовый массив
 		         ↑   ↑   ↑   ↑   ↑
 		         │   │   │   │   │
@@ -20,13 +25,21 @@ func main() {
 	sl1 := buf[1:4] // [2, 3, 4]    (с 1-го до 4-го, не включая 4-й)
 	sl2 := buf[:2]  // [1, 2]       (с начала до 2-го, не включая 2-й)
 	sl3 := buf[2:]  // [3, 4, 5]    (со 2-го до конца)
-	fmt.Println(sl1, sl2, sl3)
+
+	// ptr — адрес начала данных слайса.
+	// sl2 совпадает с buf, sl1 и sl3 сдвинуты на 1 (8 байт) и 2 элемента (тот же массив)
+	mem("buf", buf)
+	mem("sl1", sl1)
+	mem("sl2", sl2)
+	mem("sl3", sl3)
 
 	fmt.Println()
 
 	newBuf := buf[:] // [1, 2, 3, 4, 5]
 	// buf = [9, 2, 3, 4, 5], т.к. та же память
 	newBuf[0] = 9
+	mem("buf", buf)
+	mem("newBuf", newBuf) // ptr тот же, что у buf
 
 	// newBuf теперь указывает на другие данные
 	newBuf = append(newBuf, 6)
@@ -34,8 +47,8 @@ func main() {
 	// buf    = [9, 2, 3, 4, 5], не изменился
 	// newBuf = [1, 2, 3, 4, 5, 6], изменился
 	newBuf[0] = 1
-	fmt.Println("buf", buf)
-	fmt.Println("newBuf", newBuf)
+	mem("buf", buf)       // ptr не изменился
+	mem("newBuf", newBuf) // ptr другой: append не влез в cap и выделил новый массив
 
 	fmt.Println()
 
