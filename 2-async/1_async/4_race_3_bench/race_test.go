@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
+//go test -bench=. -benchmem ./2-async/1_async/4_race_3_bench/
+
 func BenchmarkMapWithRWMutex(b *testing.B) {
 	counters := make(map[int]int)
 	var mu sync.RWMutex
