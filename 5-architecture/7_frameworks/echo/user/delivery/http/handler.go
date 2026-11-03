@@ -23,6 +23,7 @@ func NewUserHandler(e *echo.Echo, us user.Usecase) {
 
 func (h *userHandler) GetUser(ctx echo.Context) error {
 	ctx.Error(errors.New("some error"))
+	return nil
 }
 
 func (h *userHandler) GetAllUsers(ctx echo.Context) error {

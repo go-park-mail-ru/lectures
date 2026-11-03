@@ -137,6 +137,31 @@ func main() {
 	siteHandler := accessLogMiddleware(siteMux)
 	siteHandler = panicMiddleware(siteHandler)
 
+	//siteHandler := Chain(siteMux, panicMiddleware, accessLogMiddleware)
+
 	fmt.Println("starting server at http://127.0.0.1:8080")
 	http.ListenAndServe(":8080", siteHandler)
+
+	//handler := LoggerMiddleware(HelloHandler)
+	//fasthttp.ListenAndServe(":8080", handler)
 }
+
+/*func Chain(h http.Handler, mws ...func(http.Handler) http.Handler) http.Handler {
+	for i := len(mws) - 1; i >= 0; i-- {
+		h = mws[i](h)
+	}
+	return h
+}
+
+func HelloHandler(ctx *fasthttp.RequestCtx) {
+	fmt.Fprintf(ctx, "Привет, мир!")
+}
+
+func LoggerMiddleware(next fasthttp.RequestHandler) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
+		fmt.Printf("Запрос к пути: %s\n", ctx.Path())
+		// Вызываем следующий обработчик
+		next(ctx)
+	}
+}
+*/

@@ -8,6 +8,11 @@ type UserRepo struct {
 	data map[string]*models.User
 }
 
+func (repo *UserRepo) GetByLogin(login string) (*models.User, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewUserRepo() *UserRepo {
 	return &UserRepo{
 		data: map[string]*models.User{

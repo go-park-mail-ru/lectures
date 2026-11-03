@@ -1,0 +1,74 @@
+package persistent
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/evrone/go-clean-template/internal/entity"
+	"github.com/evrone/go-clean-template/internal/repo"
+	"github.com/evrone/go-clean-template/pkg/postgres"
+)
+
+const _defaultEntityCap = 64
+
+// Repo -.
+type Repo struct {
+	*postgres.Postgres
+}
+
+// New returns a Translation repository instrumented with OpenTelemetry tracing spans.
+func New(pg *postgres.Postgres) repo.TranslationRepo {
+	return newTraced(&Repo{pg})
+}
+
+// GetHistory -.
+func (r *Repo) GetHistory(ctx context.Context, userID string) ([]entity.Translation, error) {
+	sql, args, err := r.Builder.
+		Select("source, destination, original, translation").
+		From("history").
+		Where("user_id = ?", userID).
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("TranslationRepo - GetHistory - r.Builder: %w", err)
+	}
+
+	rows, err := r.Pool.Query(ctx, sql, args...)
+	if err != nil {
+		return nil, fmt.Errorf("TranslationRepo - GetHistory - r.Pool.Query: %w", err)
+	}
+	defer rows.Close()
+
+	entities := make([]entity.Translation, 0, _defaultEntityCap)
+
+	for rows.Next() {
+		e := entity.Translation{}
+
+		err = rows.Scan(&e.Source, &e.Destination, &e.Original, &e.Translation)
+		if err != nil {
+			return nil, fmt.Errorf("TranslationRepo - GetHistory - rows.Scan: %w", err)
+		}
+
+		entities = append(entities, e)
+	}
+
+	return entities, nil
+}
+
+// Store -.
+func (r *Repo) Store(ctx context.Context, userID string, t entity.Translation) error {
+	sql, args, err := r.Builder.
+		Insert("history").
+		Columns("user_id, source, destination, original, translation").
+		Values(userID, t.Source, t.Destination, t.Original, t.Translation).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("TranslationRepo - Store - r.Builder: %w", err)
+	}
+
+	_, err = r.Pool.Exec(ctx, sql, args...)
+	if err != nil {
+		return fmt.Errorf("TranslationRepo - Store - r.Pool.Exec: %w", err)
+	}
+
+	return nil
+}

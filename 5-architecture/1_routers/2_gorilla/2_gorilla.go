@@ -12,13 +12,17 @@ func List(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "You see user list\n")
 }
 
+/*
+curl -v "http://localhost:8080/users/8888"
+*/
+
 func Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	fmt.Fprintf(w, "you try to see user %s\n", vars["id"])
 }
 
 /*
-curl -v -X PUT -H "Content-Type: application/json" -d '{"login":"rvasily"}' http://localhost:8080/users
+curl -v -X POST -H "Content-Type: application/json"  -H "X-Auth: test" -d '{"name":"Vasily Romanov"}' http://localhost:8080/users/rvasily
 */
 
 func Create(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +30,7 @@ func Create(w http.ResponseWriter, r *http.Request) {
 }
 
 /*
-curl -v -X POST -H "Content-Type: application/json"  -H "X-Auth: test" -d '{"name":"Vasily Romanov"}' http://localhost:8080/users/rvasily
+curl -v -X PUT -H "Content-Type: application/json" -d '{"login":"rvasily"}' http://localhost:8080/users
 */
 
 func Update(w http.ResponseWriter, r *http.Request) {

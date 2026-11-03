@@ -6,12 +6,14 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/icrowley/fake"
 )
 
+// http://localhost:8080/debug/pprof/?debug=2
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
