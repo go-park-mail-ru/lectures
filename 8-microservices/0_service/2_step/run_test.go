@@ -11,11 +11,11 @@ func TestExample(t *testing.T) {
 	sessId, err := sessManager.Create(
 		&Session{
 			Login:     "anton",
-			Useragent: "safari",
+			UserAgent: "safari",
 		})
 	t.Log("sessId", sessId, err)
 
-	// проеряем сессию
+	// проверяем сессию
 	sess := sessManager.Check(
 		&SessionID{
 			ID: sessId.ID,

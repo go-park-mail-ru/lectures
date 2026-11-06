@@ -45,7 +45,7 @@ func innerPage(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	fmt.Fprintln(w, "Welcome, "+sess.Login+" <br />")
-	fmt.Fprintln(w, "Session ua: "+sess.Useragent+" <br />")
+	fmt.Fprintln(w, "Session ua: "+sess.UserAgent+" <br />")
 	fmt.Fprintln(w, `<a href="/logout">logout</a>`)
 }
 
@@ -55,7 +55,7 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 
 	sess, err := AuthCreateSession(&Session{
 		Login:     inputLogin,
-		Useragent: r.UserAgent(),
+		UserAgent: r.UserAgent(),
 	})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -72,7 +72,7 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func logoutPage(w http.ResponseWriter, r *http.Request) {
-	session, err := r.Cookie("session_id")
+	cookieSessionID, err := r.Cookie("session_id")
 	if err == http.ErrNoCookie {
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
@@ -81,12 +81,12 @@ func logoutPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	AuthSessionDelete(&SessionID{
-		ID: session.Value,
+	AuthDeleteSession(&SessionID{
+		ID: cookieSessionID.Value,
 	})
 
-	session.Expires = time.Now().AddDate(0, 0, -1)
-	http.SetCookie(w, session)
+	cookieSessionID.Expires = time.Now().AddDate(0, 0, -1)
+	http.SetCookie(w, cookieSessionID)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
@@ -95,6 +95,7 @@ func main() {
 	http.HandleFunc("/", innerPage)
 	http.HandleFunc("/login", loginPage)
 	http.HandleFunc("/logout", logoutPage)
+
 	fmt.Println("starting server at :8080")
 	http.ListenAndServe(":8080", nil)
 }

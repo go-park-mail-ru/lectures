@@ -9,11 +9,11 @@ func TestExample(t *testing.T) {
 	sessId, err := AuthCreateSession(
 		&Session{
 			Login:     "anton",
-			Useragent: "safari",
+			UserAgent: "safari",
 		})
 	t.Log("sessId", sessId, err)
 
-	// проеряем сессию
+	// проверяем сессию
 	sess := AuthCheckSession(
 		&SessionID{
 			ID: sessId.ID,
@@ -21,7 +21,7 @@ func TestExample(t *testing.T) {
 	t.Log("sess", sess)
 
 	// удаляем сессию
-	AuthSessionDelete(
+	AuthDeleteSession(
 		&SessionID{
 			ID: sessId.ID,
 		})

@@ -7,7 +7,7 @@ import (
 
 type Session struct {
 	Login     string
-	Useragent string
+	UserAgent string
 }
 
 type SessionID struct {
@@ -23,8 +23,8 @@ type SessionManagerInterface interface {
 }
 
 type SessionManager struct {
-	mu       sync.RWMutex
 	sessions map[SessionID]*Session
+	mu       sync.RWMutex
 }
 
 func NewSessionManager() *SessionManager {

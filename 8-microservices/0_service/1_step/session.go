@@ -7,7 +7,7 @@ import (
 
 type Session struct {
 	Login     string
-	Useragent string
+	UserAgent string
 }
 
 type SessionID struct {
@@ -38,7 +38,7 @@ func AuthCheckSession(in *SessionID) *Session {
 	return nil
 }
 
-func AuthSessionDelete(in *SessionID) {
+func AuthDeleteSession(in *SessionID) {
 	mu.Lock()
 	defer mu.Unlock()
 	delete(sessions, *in)

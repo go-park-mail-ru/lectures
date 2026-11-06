@@ -1,0 +1,15 @@
+// flatc --go *.fbs
+
+namespace session;
+
+table SessionID {
+  id:string;
+}
+
+table Session {
+  login:string;
+  user_agent:string;
+  ids:[long];
+}
+
+root_type Session;
