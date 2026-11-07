@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -11,15 +12,32 @@ import (
 	"github.com/gorilla/schema"
 )
 
-// http://127.0.0.1:8080/?to=v.romanov@corp.mail.ru&priority=low&subject=Hello!&inner=ignored&id=12&flag=23
+// curl -v 'http://127.0.0.1:8080/?to=v.romanov@corp.mail.ru&priority=low&subject=Hello!&inner=ignored&id=12&flag=23'
 
 type SendMessage struct {
 	Id        int    `valid:",optional"`
 	Priority  string `valid:"in(low|normal|high)"`
 	Recipient string `schema:"to" valid:"email"`
-	Subject   string `valid:"msgSubject"`
+	Subject   string `valid:"msgSubject"` //length(min|max) runelength(1|10)
 	Inner     string `schema:"-" valid:"-"`
 	flag      int
+}
+
+type ErrorSendMessage struct {
+	Code int
+	Text string
+}
+
+func (e ErrorSendMessage) Error() string {
+	return "validate error"
+}
+
+func (s SendMessage) IsValidate() error {
+	e := ErrorSendMessage{
+		Code: 418,
+		Text: "",
+	}
+	return e
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +57,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	_, err = govalidator.ValidateStruct(msg)
 	if err != nil {
-		if allErrs, ok := err.(govalidator.Errors); ok {
+		var allErrs govalidator.Errors
+		if errors.As(err, &allErrs) {
 			for _, fld := range allErrs.Errors() {
 				data := []byte(fmt.Sprintf("field: %#v\n\n", fld))
 				w.Write(data)

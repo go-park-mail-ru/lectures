@@ -18,6 +18,7 @@ func main() {
 	e.Use(middleware.RequestIDMiddleware)
 	e.Use(echomiddleware.Logger())
 	e.Use(middleware.PanicMiddleware)
+	//e.Use(echomiddleware.Recover(), middleware.RequestIDMiddleware)
 
 	e.HTTPErrorHandler = middleware.ErrorHandler
 

@@ -1,0 +1,83 @@
+name: CI
+on: pull_request
+
+jobs:
+  golangci-lint:
+    name: runner / golangci-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.27'
+          cache: false
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          args: --timeout=15m
+
+  yamllint:
+    name: runner / yamllint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: reviewdog/action-yamllint@v1
+        with:
+          fail_level: error
+          reporter: github-pr-review
+          yamllint_flags: '-d "{extends: default, rules: {truthy: disable}}" .'
+
+  hadolint:
+    name: runner / hadolint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: reviewdog/action-hadolint@v1
+        with:
+          fail_level: error
+          reporter: github-pr-review
+
+  dotenv-linter:
+    name: runner / dotenv-linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dotenv-linter/action-dotenv-linter@v3
+        with:
+          reporter: github-pr-review
+
+  check-dependencies:
+    name: runner / check-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: 1.27
+      - name: WriteGoList
+        run: go list -json -m all > go.list
+      - name: Nancy
+        uses: sonatype-nexus-community/nancy-github-action@main
+        continue-on-error: true
+
+  unit-tests:
+    name: runner / tests / unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: 1.27
+      - name: Unit Tests
+        run: "make test"
+      - name: Upload coverage report
+        run: bash <(curl -s https://codecov.io/bash)
+
+  integration-tests:
+    name: runner / tests / integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Integration tests
+        run: "make compose-up-integration-test"

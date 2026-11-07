@@ -92,7 +92,7 @@ func main() {
 		zap.String("logger", "ZAP"),
 	)
 	AccessLogOut.ZapLogger = sugar
-
+	AccessLogOut.ZapLogger.Info("==== ZAP check fields ===")
 	// logrus
 	contextLogger := logrus.WithFields(logrus.Fields{
 		"mode":   "[access_log]",
@@ -100,7 +100,7 @@ func main() {
 	})
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 	AccessLogOut.LogrusLogger = contextLogger
-
+	AccessLogOut.LogrusLogger.Info("==== Logrus check fields ===")
 	// server stuff
 	siteMux := http.NewServeMux()
 	siteMux.HandleFunc("/", mainPage)

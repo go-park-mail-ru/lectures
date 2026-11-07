@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package grpc.v1;
+
+option go_package = "docs/proto/v1";
+
+service Translation {
+  rpc GetHistory (GetHistoryRequest) returns (GetHistoryResponse);
+  rpc Translate (TranslateRequest) returns (TranslateResponse);
+}
+
+message GetHistoryRequest {}
+
+message GetHistoryResponse {
+  repeated TranslationHistory history = 1;
+}
+
+message TranslationHistory {
+  string source = 1;
+  string destination = 2;
+  string original = 3;
+  string translation = 4;
+}
+
+message TranslateRequest {
+  string source = 1;
+  string destination = 2;
+  string original = 3;
+}
+
+message TranslateResponse {
+  string source = 1;
+  string destination = 2;
+  string original = 3;
+  string translation = 4;
+}
